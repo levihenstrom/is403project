@@ -1,5 +1,3 @@
-app.use(express.static(path.join(__dirname, 'public')));
-
 require('dotenv').config();
 
 const express = require('express');
@@ -15,6 +13,8 @@ app.set('view engine', 'ejs');
  
 // process.env.PORT is when you deploy and 3000 is for test
 const port = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 /* session middleware
 REQUIRED
