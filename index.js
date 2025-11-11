@@ -1,98 +1,179 @@
-require('dotenv').config();
+// index.js (Backend Developer - Lincoln)
 
+// 1. Module Imports
 const express = require('express');
-//Needed for the session variable
-const session = require("express-session");
+const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const methodOverride = require('method-override');
+// const { Pool } = require('pg'); // For Database Engineer - Alex
 
-let path = require('path');
-let bodyParser = require('body-parser');
+// 2. Initial Setup
+const app = express();
+const port = process.env.PORT || 3414;
 
-let app = express();
-
-app.set('view engine', 'ejs');
- 
-// process.env.PORT is when you deploy and 3000 is for test
-const port = process.env.PORT || 3000;
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-/* session middleware
-REQUIRED
-OPTIONAL (with defaults)
-resave - Default: true
-    true = save session on every request
-    false = only save if modified (receommended)
-saveUninitialized - Default: true'
-    true = create session for every request
-    false = only create when data is stored (recommended)
-
+// 3. Database Connection (Placeholder - Alex/Lincoln)
+/* const pool = new Pool({
+    user: 'your_user',
+    host: 'localhost',
+    database: 'slopesense_db',
+    password: 'your_password',
+    port: 5432,
+});
 */
 
+// 4. Middleware Configuration
+app.use(express.urlencoded({ extended: true })); // Handle form submissions
+app.use(express.json()); // Handle JSON data
+app.use(express.static('public')); // Serve static files (CSS, images)
+app.use(methodOverride('_method')); // Allow PUT/DELETE in forms
+
+// Session/Authentication Setup (Authentication Specialist - Levi)
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+    secret: 'a_very_secret_key_for_slopesense', // CHANGE THIS IN PRODUCTION
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true in production with HTTPS
 }));
-// middle ware, calling functions to help 
-app.use(express.urlencoded({extended: true}));
 
-//GLOBAL authendiation middleware - runs on EVERY request
+// EJS View Engine Setup
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(expressLayouts);
+app.set('layout', 'public'); // Sets 'public.ejs' as the default layout
+
+// Middleware to expose user to all EJS views
 app.use((req, res, next) => {
-    // skip authentication for login routes
-    if (req.path === '/' || req.path === '/login' || req.path ==='/logout') { 
-        //continue with the request path
-        return next();
-    }
-    //check if user is logged in for all other routes
-    if (req.session.isLoggedIn) {
-       next(); //user is logged in, continue
-    } else {
-        res.render("login", {error_message: "Please log in to access this page."});
-    }
+    // This is a placeholder for actual session/auth data
+    res.locals.user = req.session.user || null;
+    next();
 });
 
-app.get("/", (req, res) => {
-    /// check if fuser is logged in
-    if (req.session.isLoggedIn) {
-        res.render("/index");
-    } else {
-        res.render("login", {error_message:""});
+// Simple Auth Check Middleware
+const requireLogin = (req, res, next) => {
+    if (!req.session.user) {
+        // Redirect unauthenticated users
+        return res.redirect('/login');
     }
+    next();
+};
+
+// 5. Routes
+
+// Public Routes (Handles landing, login, register)
+// GET /: Landing page
+app.get('/', (req, res) => {
+    // If user is logged in, redirect to dashboard
+    if (req.session.user) {
+        return res.redirect('/dashboard');
+    }
+    // Renders the public landing page
+    res.render('landing', { layout: 'public' });
 });
 
-
-app.post("/login", (req, res) => {
-    let sName = req.body.username;
-    let sPassword = req.body.password;
-
-    if ((sName == 'LEVI') && (sPassword == 'admin')) {
-        //set session variable
-        req.session.isLoggedIn = true;
-        res.session.username = sName;
-        res.redirect("/");
-    } else {
-        res.render("login", {error_message: "Invalid username or password."});
-    }
+// GET /login: Show login form
+app.get('/login', (req, res) => {
+    res.render('login', { layout: 'public' });
 });
 
-app.get("/logout", (req, res) => {
-    //destroy the session
+// POST /login: Handle login attempt (Levi)
+app.post('/login', async (req, res) => {
+    // **Authentication logic goes here**
+    // 1. Query DB for user by email
+    // 2. Compare password hash
+    // 3. If successful: req.session.user = { user_id: 1, username: 'testuser', role: 'User' };
+    
+    // Placeholder success:
+    req.session.user = { user_id: 1, username: 'Lincoln', role: 'User' };
+    res.redirect('/dashboard');
+
+    // Placeholder failure:
+    // res.render('login', { error: 'Invalid email or password' });
+});
+
+// GET /register: Show registration form
+app.get('/register', (req, res) => {
+    res.render('register', { layout: 'public' });
+});
+
+// POST /register: Handle registration attempt (Levi)
+app.post('/register', async (req, res) => {
+    // **Registration logic goes here**
+    // 1. Hash password
+    // 2. Insert new user into DB
+    // 3. If successful: Redirect to login
+    res.redirect('/login');
+});
+
+// GET /logout
+app.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            console.log(err);
-        } 
-            res.redirect("/");
-        });
+            return res.redirect('/dashboard'); // Fallback
+        }
+        res.clearCookie('connect.sid'); // Clear session cookie
+        res.redirect('/');
     });
-
-app.get("/t",(req, res) => {
-    res.render("test");
 });
 
-app.get(/.*/, (req, res) => {  // RegExp form
-    res.render("index");
-  });
 
+// Private/Authenticated Routes (Require requireLogin middleware)
+
+// GET /dashboard: Private home page
+app.get('/dashboard', requireLogin, (req, res) => {
+    // The view will render based on res.locals.user
+    res.render('dashboard', { pageTitle: 'Dashboard' });
+});
+
+// GET /slopes: Display all slopes (Lincoln/Rylee)
+app.get('/slopes', requireLogin, async (req, res) => {
+    // **DB query to fetch all slopes goes here**
+    const mockSlopes = [
+        { slope_id: 1, run_name: 'The Grotto', location: 'Resort X', difficulty: 'Advanced', condition: 'Fresh Powder', created_by: 1 },
+        { slope_id: 2, run_name: 'Bunny Hill', location: 'Resort X', difficulty: 'Beginner', condition: 'Groomed', created_by: 2 }
+    ];
+    res.render('slopes', { pageTitle: 'Slopes', slopes: mockSlopes });
+});
+
+// POST /slopes: Create new slope (CRUD - Lincoln)
+app.post('/slopes', requireLogin, async (req, res) => {
+    // **DB insert logic goes here**
+    res.redirect('/slopes');
+});
+
+// GET /reports: Display all reports (Lincoln/Rylee)
+app.get('/reports', requireLogin, async (req, res) => {
+    // **DB query to fetch all reports goes here**
+    const mockReports = [
+        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', user_id: 1, username: 'RyleeDev', ice: false, obstacle: true, powder: true, closed: false, description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.', created_time: new Date() }
+    ];
+    res.render('reports', { pageTitle: 'Reports', reports: mockReports });
+});
+
+// POST /reports: Create new report (CRUD - Lincoln)
+app.post('/reports', requireLogin, async (req, res) => {
+    // **DB insert logic goes here**
+    res.redirect('/reports');
+});
+
+// GET /profile: Display user profile (Lincoln/Rylee)
+app.get('/profile', requireLogin, async (req, res) => {
+    // **DB queries for user's reports and slopes go here**
+    const mockUserSlopes = [{ slope_id: 1, run_name: 'The Grotto', location: 'Resort X' }];
+    const mockUserReports = [{ report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }];
+
+    res.render('profile', { 
+        pageTitle: 'Profile', 
+        userSlopes: mockUserSlopes, 
+        userReports: mockUserReports 
+    });
+});
+
+// Error Handling (404)
+app.use((req, res, next) => {
+    res.status(404).send("Sorry, can't find that!");
+});
+
+// 6. Start Server
 app.listen(port, () => {
-    console.log(`The server listening on port: ${port}`,`http://localhost:${port}`)
+    console.log(`SlopeSense server listening at http://localhost:${port}`);
 });
