@@ -21,6 +21,19 @@ const port = process.env.PORT || 3414;
 });
 */
 
+const knex = require("knex")({
+    client: "pg",
+    connection: {
+        host: process.env.RDS_HOSTNAME || "localhost",
+        user: process.env.RDS_USERNAME || "postgres",
+        password: process.env.RDS_PASSWORD || "42JS0cKEGfa5SNKOVH4c4MVaksfhBlN0rOA",
+        database: process.env.RDS_DB_NAME || "slopesense_db",
+        port: process.env.RDS_PORT || 5432,
+        // The new part 
+        ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false 
+    }
+});
+
 // 4. Middleware Configuration
 app.use(express.urlencoded({ extended: true })); // Handle form submissions
 app.use(express.json()); // Handle JSON data
@@ -175,5 +188,5 @@ app.use((req, res, next) => {
 
 // 6. Start Server
 app.listen(port, () => {
-    console.log(`SlopeSense server listening at http://localhost:${port}`);
+    console.log(`SlopeSense server listening at port:${port}`);
 });
