@@ -1,354 +1,71 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* style.css (Front-End Developer - Rylee) */
 
-/* GLOBAL */
+/* Basic reset/global styles */
 body {
-  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
-  color: #1e293b;
-  line-height: 1.6;
-  min-height: 100vh;
-  overflow-x: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6; /* Light gray/off-white background */
+    padding-bottom: 70px; /* Space for fixed footer */
 }
 
-/* NAVBAR */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-  color: white;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+/* Header/Navigation */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #4CAF50 !important; /* A nice green for the brand */
 }
 
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.2rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Main Content Container */
+.container {
+    padding-top: 20px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: -0.02em;
+/* Jumbotron/Landing Page Hero Section */
+.bg-light.rounded-3 {
+    background-color: #e9ecef !important;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
 }
 
-.logo:hover {
-  opacity: 0.9;
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
-.nav-button {
-  background: white;
-  color: #1e40af;
-  padding: 0.6rem 1.25rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s ease;
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.nav-button:hover {
-  background: #f1f5f9;
-  transform: translateY(-1px);
+/* Cards/Shadows for content sections */
+.card {
+    border: none;
+    transition: transform 0.2s;
 }
 
-/* HERO SECTION */
-.hero {
-  padding: 9rem 2rem 5rem;
-  text-align: center;
-  background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+.card:hover {
+    transform: translateY(-3px);
 }
 
-.hero-title {
-  font-size: 3.25rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1rem;
+/* Footer style (must match the .fixed-bottom and bg-dark in EJS) */
+footer {
+    min-height: 50px;
 }
 
-.hero-subtitle {
-  color: #475569;
-  font-size: 1.2rem;
-  max-width: 700px;
-  margin: 0 auto;
-  line-height: 1.7;
+/* Specific component styles */
+.badge {
+    padding: 0.4em 0.6em;
 }
 
-/* FEATURES */
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 4rem auto 0;
-  padding: 0 2rem;
+/* Custom colors for difficulty badges if not using Bootstrap defaults */
+.bg-beginner {
+    background-color: #28a745 !important; /* Green */
 }
-
-.feature-card {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 2.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+.bg-intermediate {
+    background-color: #007bff !important; /* Blue */
 }
-
-.feature-card:hover {
-  transform: translateY(-4px);
-  border-color: #3b82f6;
-  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
+.bg-advanced {
+    background-color: #dc3545 !important; /* Red */
 }
-
-.feature-icon {
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
+.bg-expert {
+    background-color: #343a40 !important; /* Dark Grey */
 }
-
-.feature-icon svg {
-  width: 26px;
-  height: 26px;
-  color: #2563eb;
-}
-
-.feature-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.feature-description {
-  color: #64748b;
-  line-height: 1.7;
-}
-
-/* CTA SECTION */
-.cta-section {
-  margin-top: 5rem;
-  padding: 0 2rem;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.cta-card {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border: 2px solid #3b82f6;
-  border-radius: 20px;
-  padding: 4rem 2rem;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
-}
-
-.cta-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 1rem;
-}
-
-.cta-text {
-  color: #475569;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-}
-
-.cta-button {
-  padding: 1rem 2.5rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-}
-
-/* LOGIN PAGE */
-.login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 7rem 1rem 2rem;
-  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
-}
-
-.login-card {
-  background: white;
-  border-radius: 20px;
-  padding: 3rem;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-}
-
-.login-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1e293b;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.login-subtitle {
-  color: #64748b;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-label {
-  display: block;
-  font-weight: 600;
-  color: #334155;
-  font-size: 0.95rem;
-  margin-bottom: 0.4rem;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 10px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
-  transition: all 0.2s ease;
-}
-
-.form-input:focus {
-  border-color: #3b82f6;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-  outline: none;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  margin-bottom: 1.25rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #64748b;
-}
-
-.checkbox-label input {
-  accent-color: #2563eb;
-}
-
-.forgot-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.forgot-link:hover {
-  color: #1e40af;
-}
-
-.submit-button {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.submit-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
-}
-
-.signup-prompt {
-  text-align: center;
-  color: #64748b;
-  font-size: 0.95rem;
-  margin-top: 1.5rem;
-}
-
-.signup-link {
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.signup-link:hover {
-  text-decoration: underline;
-}
-
-.login-footer {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin-top: 2rem;
-}
-
-/* FOOTER */
-.footer {
-  text-align: center;
-  padding: 2rem;
-  color: #94a3b8;
-  font-size: 0.9rem;
-  border-top: 1px solid #e2e8f0;
-  background: white;
-  margin-top: 5rem;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-  }
-
-  .login-card {
-    padding: 2rem;
-  }
-}
-
-

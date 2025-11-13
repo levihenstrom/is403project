@@ -1,0 +1,49 @@
+<% pageTitle = 'User Profile' %>
+
+<h1 class="mb-4">User Profile: <%= locals.user ? user.username : 'Loading...' %></h1>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Account Details</h5>
+        <p><strong>Username:</strong> <%= locals.user.username %></p>
+        <p><strong>Email:</strong> <%= locals.user.email %></p>
+        <p><strong>Member Since:</strong> <%= new Date(locals.user.date_created).toDateString() %></p>
+        <p><strong>Role:</strong> <span class="badge bg-info"><%= locals.user.role || 'User' %></span></p>
+        <button class="btn btn-sm btn-secondary">Edit Profile</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Your Submitted Slopes</h2>
+        <% if (locals.userSlopes && userSlopes.length) { %>
+            <ul class="list-group">
+                <% userSlopes.forEach(slope => { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <%= slope.run_name %> (<%= slope.location %>)
+                        <div>
+                            <a href="/slopes/<%= slope.slope_id %>" class="btn btn-sm btn-outline-primary me-2">View</a>
+                            </div>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <div class="alert alert-light">You haven't added any slopes yet.</div>
+        <% } %>
+    </div>
+    <div class="col-md-6">
+        <h2>Your Condition Reports</h2>
+        <% if (locals.userReports && userReports.length) { %>
+            <ul class="list-group">
+                <% userReports.forEach(report => { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Report on **<%= report.slope_name || 'ID ' + report.slope_id %>**
+                        <small class="text-muted"><%= new Date(report.created_time).toLocaleDateString() %></small>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <div class="alert alert-light">You haven't submitted any reports yet.</div>
+        <% } %>
+    </div>
+</div>

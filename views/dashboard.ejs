@@ -1,0 +1,41 @@
+<% pageTitle = 'Dashboard' %>
+
+<h1 class="mb-4">Welcome Back, <%= locals.user ? user.username : 'Rider' %>!</h1>
+<p class="lead">Quick access to the latest mountain data and your activity.</p>
+
+<div class="row g-4 mt-3">
+    <div class="col-md-4">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body">
+                <h5 class="card-title">View Slopes</h5>
+                <p class="card-text">Explore all available mountain runs, their details, and official conditions.</p>
+                <a href="/slopes" class="btn btn-outline-light">Go to Slopes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body">
+                <h5 class="card-title">Check Reports</h5>
+                <p class="card-text">See real-time community reports on ice, powder, and hazards.</p>
+                <a href="/reports" class="btn btn-outline-light">View Reports</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-secondary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Your Profile</h5>
+                <p class="card-text">Manage your account and review your submitted slopes and reports.</p>
+                <a href="/profile" class="btn btn-outline-light">Go to Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mt-5">Latest Reports</h2>
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action">Fresh powder reported on The Bowl - 1 hour ago.</a>
+    <a href="#" class="list-group-item list-group-item-action">Caution: Icy patch near Lift 3 base.</a>
+    <a href="#" class="list-group-item list-group-item-action">New run 'Eagle's Peak' added by Admin.</a>
+</div>

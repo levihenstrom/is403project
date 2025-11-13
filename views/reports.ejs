@@ -1,0 +1,102 @@
+<% pageTitle = 'Reports' %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Community Condition Reports</h1>
+    <% if (locals.user) { %>
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addReportModal">
+            + Submit New Report
+        </button>
+    <% } %>
+</div>
+
+<h2>Latest Hazards & Conditions</h2>
+
+<% if (locals.reports && reports.length) { %>
+    <div class="list-group">
+        <% reports.forEach(report => { %>
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><%= report.slope_name || 'Slope ID ' + report.slope_id %></h5>
+                    <small class="text-muted"><%= new Date(report.created_time).toLocaleString() %></small>
+                </div>
+                <p class="mb-1">
+                    <strong>Reported by:</strong> <%= report.username || 'Anonymous' %>
+                    <br>
+                    <strong>Status:</strong> 
+                    <% if (report.ice) { %>
+                        <span class="badge bg-danger me-1">🧊 Ice</span>
+                    <% } %>
+                    <% if (report.obstacle) { %>
+                        <span class="badge bg-danger me-1">⚠️ Obstacle</span>
+                    <% } %>
+                    <% if (report.powder) { %>
+                        <span class="badge bg-info me-1">❄️ Powder</span>
+                    <% } %>
+                    <% if (report.closed) { %>
+                        <span class="badge bg-dark me-1">🚫 Closed</span>
+                    <% } %>
+                </p>
+                <small><%= report.description %></small>
+                <% if (locals.user && (user.user_id === report.user_id || user.role === 'Admin')) { %>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-warning">Edit</button>
+                        <form action="/reports/<%= report.report_id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+<% } else { %>
+    <div class="alert alert-info text-center">
+        No community reports have been submitted yet.
+    </div>
+<% } %>
+
+<div class="modal fade" id="addReportModal" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addReportModalLabel">Submit Condition Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/reports" method="POST">
+                    <div class="mb-3">
+                        <label for="slope_id" class="form-label">Select Slope/Run</label>
+                        <select class="form-select" id="slope_id" name="slope_id" required>
+                            <option value="">Choose...</option>
+                            </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Conditions/Hazards</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="ice" name="ice" value="true">
+                                <label class="form-check-label" for="ice">Ice</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="obstacle" name="obstacle" value="true">
+                                <label class="form-check-label" for="obstacle">Obstacle</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="powder" name="powder" value="true">
+                                <label class="form-check-label" for="powder">Powder</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="closed" name="closed" value="true">
+                                <label class="form-check-label" for="closed">Closed</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Additional Details</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Submit Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
