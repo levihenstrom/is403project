@@ -42,6 +42,33 @@ nav.navbar.navbar-expand-lg {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
 }
 
+/* Make ALL navbar links simple underlined text */
+nav.navbar .nav-link {
+    nav.navbar .nav-link {
+    position: relative;
+    background: none !important;
+    border: none !important;
+    color: var(--ss-blue) !important;
+    padding: 8px 12px !important;
+    font-weight: 600 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+
+    /* 🚫 kill all underlines from browser/Bootstrap */
+    text-decoration: none !important;
+}
+
+}
+
+/* Hover style: darker blue underline */
+nav.navbar .nav-link:hover {
+    color: #094db3 !important;
+    text-decoration: underline !important;
+    transform: none !important;
+}
+
+
 /* -------- HERO BANNER -------- */
 .hero-banner {
     background-image: url('/images/mountains.jpg');
@@ -79,6 +106,21 @@ nav.navbar.navbar-expand-lg {
     font-size: 1.2rem;
     text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.35);
 }
+
+/* PARALLAX HERO EFFECT */
+.hero-banner {
+    background-attachment: fixed; /* creates the parallax */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Disable parallax on mobile (prevents weird zoom) */
+@media (max-width: 768px) {
+    .hero-banner {
+        background-attachment: scroll;
+    }
+}
+
 
 /* -------- BUTTONS -------- */
 .btn-primary,
@@ -203,3 +245,153 @@ footer {
     background-color: #E7A53A; /* exact gold from logo */
     padding: 6px 14px;
 }
+
+/* ================================
+   SlopeSense Theme Colors (SAFE)
+================================ */
+:root {
+    --ss-blue: #1E56A0;
+    --ss-blue-dark: #163f75;
+    --ss-gold: #E7A53A;
+}
+
+/* ================================
+   NAVBAR LINKS — underline text only
+================================ */
+nav.navbar .nav-link {
+    background: none !important;
+    border: none !important;
+    color: var(--ss-blue) !important;
+    text-decoration: underline !important;
+    padding: 8px 12px !important;
+    font-weight: 600 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+nav.navbar .nav-link:hover {
+    color: var(--ss-blue-dark) !important;
+    
+}
+
+/* Remove default underline */
+nav.navbar .nav-link {
+    position: relative;
+    text-decoration: none !important;
+    color: var(--ss-blue) !important;
+}
+
+/* Underline animation */
+nav.navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 4px; /* moves underline close to text */
+    width: 0%;
+    height: 2px;
+    background-color: var(--ss-gold);
+    transition: width 0.3s ease;
+}
+
+/* Hover: gold underline slides in */
+nav.navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+
+/* ================================
+   BUTTONS — only brand color update
+================================ */
+.btn-primary {
+    background-color: var(--ss-blue) !important;
+    border-color: var(--ss-blue) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--ss-blue-dark) !important;
+}
+
+/* ================================
+   FEATURE CARDS — only gold hover
+================================ */
+.feature-image-card:hover .feature-text-overlay h3,
+.feature-image-card:hover .feature-text-overlay p {
+    background-color: var(--ss-gold) !important;
+}
+
+footer {
+    display: none !important;
+}
+
+nav.navbar .nav-link {
+    border: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    text-decoration: none !important; /* backup */
+}
+
+nav.navbar .nav-link:hover {
+    border: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+}
+
+nav.navbar a {
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* FORCE REMOVE SAFARI/LINK INTERNAL UNDERLINE */
+nav.navbar .nav-link,
+nav.navbar .nav-link:visited,
+nav.navbar .nav-link:active,
+nav.navbar .nav-link:focus {
+    -webkit-text-decoration-skip: none !important;
+    -webkit-text-decoration: none !important;
+    text-decoration: none !important;
+}
+
+/* SAFARI LINK UNDERLINE NUKER — FINAL FIX */
+nav.navbar .nav-link,
+nav.navbar .nav-link:focus,
+nav.navbar .nav-link:visited,
+nav.navbar .nav-link:active {
+    text-decoration: none !important;
+    -webkit-text-decoration: none !important;
+    text-decoration-line: none !important;
+    -webkit-text-decoration-line: none !important;
+    text-decoration-color: transparent !important;
+    -webkit-text-decoration-color: transparent !important;
+}
+
+/* ================================
+   FROSTED GLASS NAVBAR ❄️
+================================ */
+nav.navbar {
+    background: rgba(255, 255, 255, 0.65) !important; /* translucent white */
+    backdrop-filter: blur(12px) saturate(140%); /* the frosted glass effect */
+    -webkit-backdrop-filter: blur(12px) saturate(140%); /* Safari support */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* soft border */
+    box-shadow: 0 2px 18px rgba(0, 0, 0, 0.12); /* subtle shadow */
+}
+
+/* Bigger logo scaling */
+.navbar .navbar-brand img.brand-logo {
+    height: 150px !important;   /* increased from 120 → 150 */
+    width: auto !important;
+    object-fit: contain !important;
+    margin-top: -20px !important; /* lets it rise above the navbar slightly */
+    margin-bottom: -20px !important; /* keeps centered visually */
+    padding: 0 !important;
+}
+
+/* Taller hero section */
+.hero-banner {
+    padding: 140px 40px !important; /* increased from ~90px → 140px */
+}
+
+
+
+
+
