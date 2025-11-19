@@ -1,9 +1,12 @@
 <% pageTitle = 'Dashboard' %>
-
-<h1 class="mb-4">Welcome Back, <%= locals.user ? user.username : 'Rider' %>!</h1>
-<p class="lead">Quick access to the latest mountain data and your activity.</p>
-
 <div class="dashboard-page">
+    <div class="dashboard-hero">
+    <div class="dashboard-hero-text">
+        <h1>Welcome Back, <%= user.username %>!</h1>
+        <p>Quick access to the latest mountain data and your activity.</p>
+    </div>
+</div>
+
 <div class="row g-4 mt-3">
     <div class="col-md-4">
         <div class="card text-white bg-info h-100">
