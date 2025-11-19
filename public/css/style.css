@@ -1,71 +1,205 @@
-/* style.css (Front-End Developer - Rylee) */
+/* =========================================
+   SlopeSense Aesthetic UI Redesign (2025)
+   Clean • Modern • Alpine Blue Theme
+========================================= */
 
-/* Basic reset/global styles */
+/* -------- GLOBAL -------- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6; /* Light gray/off-white background */
-    padding-bottom: 70px; /* Space for fixed footer */
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to bottom, #f8fbff, #eef3f8);
+    min-height: 100vh;
+    padding-bottom: 80px;
+    color: #2e3a4e;
 }
 
-/* Header/Navigation */
+* {
+    border-radius: 6px;
+}
+
+/* -------- NAVBAR -------- */
+nav.navbar.navbar-expand-lg {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    min-height: 80px !important;
+    background: #ffffff !important;
+}
+
 .navbar-brand {
-    font-weight: bold;
-    font-size: 1.5rem;
-    color: #4CAF50 !important; /* A nice green for the brand */
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-/* Main Content Container */
-.container {
-    padding-top: 20px;
+.navbar .navbar-brand img.brand-logo {
+    height: 130px !important;
+    width: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    max-height: none !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
 }
 
-/* Jumbotron/Landing Page Hero Section */
-.bg-light.rounded-3 {
-    background-color: #e9ecef !important;
-    border-radius: 0.5rem;
-    border: 1px solid #dee2e6;
+/* -------- HERO BANNER -------- */
+.hero-banner {
+    background-image: url('/images/mountains.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 90px 40px;
+    color: white;
+    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+    position: relative;
+}
+
+.hero-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 69, 122, 0.35);
+    border-radius: 14px;
+}
+
+.hero-banner > * {
+    position: relative;
+}
+
+.hero-banner h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.hero-banner p {
+    font-size: 1.2rem;
+    text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* -------- BUTTONS -------- */
+.btn-primary,
+.btn-success,
+.btn-light {
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
 }
 
 .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
 }
 
-/* Cards/Shadows for content sections */
-.card {
+.btn-success:hover {
+    background-color: #094db3;
+    transform: translateY(-2px);
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-2px);
+}
+
+/* -------- LIST ITEMS -------- */
+.list-group-item {
+    background: #ffffff;
     border: none;
-    transition: transform 0.2s;
+    margin-bottom: 10px;
+    padding: 18px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
-.card:hover {
-    transform: translateY(-3px);
+.list-group-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Footer style (must match the .fixed-bottom and bg-dark in EJS) */
+/* -------- FOOTER -------- */
 footer {
-    min-height: 50px;
+    background: #ffffff;
+    border-top: 1px solid #e4e9f1;
+    color: #4a5568;
+    padding: 16px;
+    text-align: center;
 }
 
-/* Specific component styles */
-.badge {
-    padding: 0.4em 0.6em;
+/* =======================================
+   FEATURE IMAGE CARDS (Hawaiian Style)
+======================================= */
+.feature-image-card {
+    display: block;
+    position: relative;
+    height: 380px;
+    border-radius: 18px;
+    overflow: hidden;
+    background-image: var(--image);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
 }
 
-/* Custom colors for difficulty badges if not using Bootstrap defaults */
-.bg-beginner {
-    background-color: #28a745 !important; /* Green */
+.feature-image-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.25);
 }
-.bg-intermediate {
-    background-color: #007bff !important; /* Blue */
+
+/* Gradient overlay */
+.feature-image-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.6),
+        rgba(0,0,0,0.15)
+    );
+    z-index: 1;
 }
-.bg-advanced {
-    background-color: #dc3545 !important; /* Red */
+
+/* Text overlay */
+.feature-text-overlay {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    right: 18px;
+    color: white;
+    z-index: 2;
+    text-align: left;
 }
-.bg-expert {
-    background-color: #343a40 !important; /* Dark Grey */
+
+/* Text default state */
+.feature-text-overlay h3,
+.feature-text-overlay p {
+    position: relative;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: background-color 0.35s ease, padding 0.35s ease;
+}
+
+/* Solid gold highlight on hover */
+.feature-image-card:hover .feature-text-overlay h3,
+.feature-image-card:hover .feature-text-overlay p {
+    background-color: #E7A53A; /* exact gold from logo */
+    padding: 6px 14px;
 }
