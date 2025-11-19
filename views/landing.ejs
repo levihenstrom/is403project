@@ -1,27 +1,51 @@
 <% pageTitle = 'Welcome' %>
 
-<div class="p-5 mb-4 bg-light rounded-3 text-center">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">SlopeSense</h1>
-        <p class="col-md-8 fs-4 mx-auto">Your community-driven platform for real-time mountain run conditions and hazard reporting.</p>
-        <hr class="my-4">
-        <p>Get the latest reports before you hit the slopes. Join the community now!</p>
-        <a class="btn btn-primary btn-lg" href="/register" role="button">Get Started</a>
-        <a class="btn btn-outline-secondary btn-lg" href="/login" role="button">Login</a>
+<!-- Hero Banner (Mountain Background) -->
+<div class="hero-banner mb-5">
+    <h1>SlopeSense</h1>
+    <p>Your community-driven platform for real-time mountain run conditions and hazard reporting.</p>
+
+    <div class="mt-4">
+        <a href="/register" class="btn btn-primary me-2">Get Started</a>
+        <a href="/login" class="btn btn-light text-dark">Login</a>
     </div>
 </div>
 
-<div class="row text-center">
-    <div class="col-md-4">
-        <h2>Report Conditions</h2>
-        <p>Share updates on powder, ice, and hazards with fellow riders.</p>
+<!-- Three Features Section -->
+<div class="container mt-5">
+
+    <div class="row g-4">
+
+        <!-- Report Conditions -->
+        <div class="col-md-4">
+            <a href="/reports" class="feature-image-card" style="--image: url('/images/report.jpg')">
+                <div class="feature-text-overlay">
+                    <h3>Report Conditions</h3>
+                    <p>Share updates on powder, ice, and hazards with fellow riders.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- View Slopes -->
+        <div class="col-md-4">
+            <a href="/slopes" class="feature-image-card" style="--image: url('/images/slopes.jpg')">
+                <div class="feature-text-overlay">
+                    <h3>View Slopes</h3>
+                    <p>Browse detailed information on runs, their location, and difficulty.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Connect -->
+        <div class="col-md-4">
+            <a href="/profile" class="feature-image-card" style="--image: url('/images/connect.jpg')">
+                <div class="feature-text-overlay">
+                    <h3>Connect</h3>
+                    <p>Manage your profile and track all your submitted reports and slope entries.</p>
+                </div>
+            </a>
+        </div>
+
     </div>
-    <div class="col-md-4">
-        <h2>View Slopes</h2>
-        <p>Browse detailed information on runs, their location, and difficulty.</p>
-    </div>
-    <div class="col-md-4">
-        <h2>Connect</h2>
-        <p>Manage your profile and track all your submitted reports and slope entries.</p>
-    </div>
+
 </div>
