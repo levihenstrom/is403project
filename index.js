@@ -88,7 +88,17 @@ app.post('/login', async (req, res) => {
     // 3. If successful: req.session.user = { user_id: 1, username: 'testuser', role: 'User' };
     
     // Placeholder success:
-    req.session.user = { user_id: 1, username: 'Lincoln', role: 'User', date_created: '2024-09-08' };
+    req.session.user = {
+        user_id: 1,
+        username: 'Lincly',
+        email: 'lincly@gmail.com',
+        first_name: 'Lincoln',
+        last_name: 'Lyons',
+        birthday: '1987-08-09',
+        fav_resort: 'Snowbird',
+        date_created: '2024-09-08'
+    };
+    // Fav_resort will be id and needs the name queried out.
     res.redirect('/dashboard');
 
     // Placeholder failure:
@@ -129,22 +139,47 @@ app.get('/dashboard', requireLogin, (req, res) => {
     res.render('dashboard', { pageTitle: 'Dashboard' });
 });
 
-// GET /slopes: Display all slopes (Lincoln/Rylee)
+// GET /slopes: Display all slopes
 app.get('/slopes', requireLogin, async (req, res) => {
     // **DB query to fetch all slopes goes here**
     const mockSlopesAR = [
-        { slope_id: 1, run_name: 'The Grotto', area: 'Mineral Basin', resort: 'Snowbird', difficulty: 'Advanced', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true },
-        { slope_id: 2, run_name: 'Bunny Hill', area: 'Gad Valley', resort: 'Snowbird', difficulty: 'Beginner', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true }
+        { run_id: 1, run_name: 'The Grotto', area: 'Mineral Basin', resort: 'Snowbird', difficulty: 'Advanced', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true },
+        { run_id: 2, run_name: 'Bunny Hill', area: 'Gad Valley', resort: 'Snowbird', difficulty: 'Beginner', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true }
     ];
     res.render('slopes', { pageTitle: 'Slopes', slopes: mockSlopesAR });
 });
 
-// GET /reports: Display all reports (Lincoln/Rylee)
+app.post('/editReport/<%= slope.slope_id %>', requireLogin, async (req, res) => {
+    // **DB insert logic goes here**
+    res.redirect('/profile');
+});
+
+app.post('/deleteReport/<%= slope.slope_id %>', requireLogin, async (req, res) => {
+    // **DB insert logic goes here**
+    res.redirect('/profile');
+});
+
+// GET /reports: Display all reports
 app.get('/reports', requireLogin, async (req, res) => {
     // **DB query to fetch all reports goes here**
-    const mockReports = [
-        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', user_id: 1, username: 'RyleeDev', ice: false, obstacle: true, powder: true, closed: false, description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.', created_time: new Date() }
-    ];
+    const mockReports = [{
+        report_id: 1,
+        slope_id: 1,
+        slope_name: 'The Grotto',
+        user_id: 1,
+        username: 'testPerson',
+        obstacle: true,
+        description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.',
+        groomed: false,
+        icy: true,
+        powder: false,
+        moguls: false,
+        granular: true,
+        thin_cover: true,
+        packed: false,
+        wet: false,
+        created_time: new Date()
+    }]; // Need to query for slope name and username
     res.render('reports', {
         pageTitle: 'Reports',
         reports: mockReports,
@@ -171,7 +206,7 @@ app.get('/profile', requireLogin, async (req, res) => {
 
     res.render('profile', { 
         pageTitle: 'Profile', 
-        userReports: mockUserReports,
+        reports: mockUserReports,
         resorts: [ { resort_name : "Snowbird"}, {resort_name : "Brighton"}, {resort_name : "Sundance"}, {resort_name : "Alta"}]
     });
 });
