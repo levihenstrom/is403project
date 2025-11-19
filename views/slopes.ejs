@@ -2,11 +2,6 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Mountain Runs</h1>
-    <% if (locals.user) { %>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSlopeModal">
-            + Add New Slope
-        </button>
-    <% } %>
 </div>
 
 <% if (locals.slopes && slopes.length) { %>
@@ -16,22 +11,16 @@
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title"><%= slope.run_name %></h5>
-                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.location %></h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.area %></h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.resort %></h6>
                         <p class="card-text">
                             <strong>Difficulty:</strong> <span class="badge bg-<%= 
                                 slope.difficulty.toLowerCase().includes('beginner') ? 'success' : 
                                 slope.difficulty.toLowerCase().includes('intermediate') ? 'primary' : 
                                 'danger' 
                             %>"><%= slope.difficulty %></span><br>
-                            <strong>Condition:</strong> <%= slope.condition %>
                         </p>
-                        <a href="/slopes/<%= slope.slope_id %>" class="card-link">View Details</a>
-                        <% if (locals.user && (user.user_id === slope.created_by || user.role === 'Admin')) { %>
-                            <button class="btn btn-sm btn-warning ms-2">Edit</button>
-                            <form action="/slopes/<%= slope.slope_id %>?_method=DELETE" method="POST" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        <% } %>
+                        <a href="/slopeDetails/<%= slope.slope_id %>" class="btn btn-primary">More Details</a>
                     </div>
                 </div>
             </div>
@@ -42,44 +31,3 @@
         No slopes have been added yet. Be the first!
     </div>
 <% } %>
-
-<div class="modal fade" id="addSlopeModal" tabindex="-1" aria-labelledby="addSlopeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addSlopeModalLabel">Add New Slope</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/slopes" method="POST">
-                    <div class="mb-3">
-                        <label for="run_name" class="form-label">Run Name</label>
-                        <input type="text" class="form-control" id="run_name" name="run_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="location" class="form-label">Location/Resort</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="difficulty" class="form-label">Difficulty</label>
-                        <select class="form-select" id="difficulty" name="difficulty" required>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                            <option value="Expert">Expert</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="condition" class="form-label">Initial Condition</label>
-                        <input type="text" class="form-control" id="condition" name="condition" placeholder="e.g., Groomed, Icy, Fresh Powder" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="image_url" class="form-label">Image URL (Optional)</label>
-                        <input type="url" class="form-control" id="image_url" name="image_url">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit Slope</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

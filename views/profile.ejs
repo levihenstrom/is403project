@@ -1,36 +1,23 @@
 <% pageTitle = 'User Profile' %>
 
-<h1 class="mb-4">User Profile: <%= locals.user ? user.username : 'Loading...' %></h1>
+<h1 class="mb-4">User Profile: <%= locals.user ? user.username : 'You' %></h1>
 
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
         <h5 class="card-title">Account Details</h5>
         <p><strong>Username:</strong> <%= locals.user.username %></p>
         <p><strong>Email:</strong> <%= locals.user.email %></p>
+        <p><strong>Name:</strong> <%= locals.user.first_name%> <%= locals.user.last_name %></p>
+        <p><strong>Birthday:</strong> <%= locals.user.birthday %></p>
+        <p><strong>Favorite Resort:</strong> <%= locals.user.fav_resort %></p>
         <p><strong>Member Since:</strong> <%= new Date(locals.user.date_created).toDateString() %></p>
-        <p><strong>Role:</strong> <span class="badge bg-info"><%= locals.user.role || 'User' %></span></p>
-        <button class="btn btn-sm btn-secondary">Edit Profile</button>
+        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#updateUserModal">
+            Edit Profile
+        </button>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        <h2>Your Submitted Slopes</h2>
-        <% if (locals.userSlopes && userSlopes.length) { %>
-            <ul class="list-group">
-                <% userSlopes.forEach(slope => { %>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <%= slope.run_name %> (<%= slope.location %>)
-                        <div>
-                            <a href="/slopes/<%= slope.slope_id %>" class="btn btn-sm btn-outline-primary me-2">View</a>
-                            </div>
-                    </li>
-                <% }); %>
-            </ul>
-        <% } else { %>
-            <div class="alert alert-light">You haven't added any slopes yet.</div>
-        <% } %>
-    </div>
     <div class="col-md-6">
         <h2>Your Condition Reports</h2>
         <% if (locals.userReports && userReports.length) { %>
@@ -45,5 +32,54 @@
         <% } else { %>
             <div class="alert alert-light">You haven't submitted any reports yet.</div>
         <% } %>
+    </div>
+</div>
+
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateUserModalLabel">Submit Condition Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/profile/<%= locals.user.user_id %>" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<%= locals.user.username %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" value="<%= locals.user.email %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="text" class="form-control" id="password" name="password" value="<%= locals.user.password %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="<%= locals.user.first_name %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="<%= locals.user.last_name %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthday" class="form-label">Birthday</label>
+                        <input type="date" class="form-control" id="birthday" name="birthday" value="<%= locals.user.birthday %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fav_resort" class="form-label">Favortie Resort</label>
+                        <select class="form-select" id="fav_resort" name="fav_resort" required>
+                            <option value="">--Select and option--</option>
+                            <% resorts.forEach(resort => { %>
+                                <option value="<%= resort.resort_name %>"> <%= resort.resort_name %></option>
+                            <% }); %>
+                            </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Submit Report</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

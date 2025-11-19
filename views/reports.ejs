@@ -23,17 +23,32 @@
                     <strong>Reported by:</strong> <%= report.username || 'Anonymous' %>
                     <br>
                     <strong>Status:</strong> 
-                    <% if (report.ice) { %>
-                        <span class="badge bg-danger me-1">🧊 Ice</span>
-                    <% } %>
                     <% if (report.obstacle) { %>
-                        <span class="badge bg-danger me-1">⚠️ Obstacle</span>
+                        <span class="badge bg-danger me-1">Obstacle</span>
+                    <% } %>
+                    <% if (report.groomed) { %>
+                        <span class="badge bg-danger me-1">Groomed</span>
+                    <% } %>
+                    <% if (report.icy) { %>
+                        <span class="badge bg-danger me-1">Icy</span>
                     <% } %>
                     <% if (report.powder) { %>
-                        <span class="badge bg-info me-1">❄️ Powder</span>
+                        <span class="badge bg-info me-1">Powder</span>
                     <% } %>
-                    <% if (report.closed) { %>
-                        <span class="badge bg-dark me-1">🚫 Closed</span>
+                    <% if (report.moguls) { %>
+                        <span class="badge bg-dark me-1">Moguls</span>
+                    <% } %>
+                    <% if (report.granular) { %>
+                        <span class="badge bg-danger me-1">Granular</span>
+                    <% } %>
+                    <% if (report.thin_cover) { %>
+                        <span class="badge bg-danger me-1">Thin Cover</span>
+                    <% } %>
+                    <% if (report.packed) { %>
+                        <span class="badge bg-danger me-1">Packed</span>
+                    <% } %>
+                    <% if (report.wet) { %>
+                        <span class="badge bg-danger me-1">Wet</span>
                     <% } %>
                 </p>
                 <small><%= report.description %></small>
@@ -62,27 +77,54 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/reports" method="POST">
+                <form action="/reports/<%= locals.user.user_id %>" method="POST">
                     <div class="mb-3">
                         <label for="slope_id" class="form-label">Select Slope/Run</label>
                         <select class="form-select" id="slope_id" name="slope_id" required>
-                            <option value="">Choose...</option>
+                            <option value="">--Select and option--</option>
+                            <% runs.forEach(run => { %>
+                                <option value="<%= run.run_name %>"> <%= run.run_name %></option>
+                            <% }); %>
                             </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Conditions/Hazards</label>
                         <div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="ice" name="ice" value="true">
-                                <label class="form-check-label" for="ice">Ice</label>
-                            </div>
-                            <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="obstacle" name="obstacle" value="true">
                                 <label class="form-check-label" for="obstacle">Obstacle</label>
                             </div>
                             <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="groomed" name="groomed" value="true">
+                                <label class="form-check-label" for="groomed">Groomed</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="icy" name="icy" value="true">
+                                <label class="form-check-label" for="icy">Icy</label>
+                            </div>
+                            <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="powder" name="powder" value="true">
                                 <label class="form-check-label" for="powder">Powder</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="moguls" name="moguls" value="true">
+                                <label class="form-check-label" for="moguls">Moguls</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="granular" name="granular" value="true">
+                                <label class="form-check-label" for="granular">Granular</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="thin_cover" name="thin_cover" value="true">
+                                <label class="form-check-label" for="thin_cover">Thin Cover</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="packed" name="packed" value="true">
+                                <label class="form-check-label" for="packed">Packed</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="wet" name="wet" value="true">
+                                <label class="form-check-label" for="wet">Wet</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="closed" name="closed" value="true">
@@ -91,7 +133,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Additional Details</label>
+                        <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-warning">Submit Report</button>
