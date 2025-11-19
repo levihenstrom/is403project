@@ -16,6 +16,21 @@ body {
     border-radius: 6px;
 }
 
+/* Make body full height and push footer to bottom */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure main content grows so footer drops */
+main.container {
+    flex: 1;
+}
+
 /* -------- NAVBAR -------- */
 nav.navbar.navbar-expand-lg {
     padding-top: 0 !important;
@@ -320,9 +335,6 @@ nav.navbar .nav-link:hover::after {
     background-color: var(--ss-gold) !important;
 }
 
-footer {
-    display: none !important;
-}
 
 nav.navbar .nav-link {
     border: none !important;
@@ -903,20 +915,6 @@ body {
     position: relative;
 }
 
-.dashboard-page h2::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 60px;
-    height: 4px;
-    background: var(--ss-gold);
-    border-radius: 4px;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-}
-
 .dashboard-page h2:hover::after {
     transform: scaleX(1);
 }
@@ -946,3 +944,298 @@ body {
     background: #f7fbff !important;
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
+
+.dashboard-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.0) 0%,
+        rgba(255,255,255,0.15) 40%
+    );
+    border-radius: inherit;
+}
+
+/* --- SLOPES PAGE ---------------------------------------------- */
+
+/* Page title */
+h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #1f3b73;
+    letter-spacing: -0.5px;
+}
+
+/* Wrapper spacing */
+.slopes-page {
+    margin-top: 30px;
+}
+
+/* Slope Cards */
+.card {
+    border: none !important;
+    border-radius: 18px !important;
+    background: #ffffff;
+    padding: 8px 4px;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Title */
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #113a70;
+}
+
+/* Subtitle (area + resort) */
+.card-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+/* Difficulty badge overrides */
+.badge {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-radius: 999px !important;
+    font-weight: 600;
+    color: #fff !important;
+}
+
+/* Beginner */
+.badge.bg-success {
+    background-color: #1ea35c !important;
+}
+
+/* Intermediate */
+.badge.bg-primary {
+    background-color: #2b6cb0 !important;
+}
+
+/* Expert */
+.badge.bg-danger {
+    background-color: #d64545 !important;
+}
+
+/* More Details Button */
+.card .btn-primary {
+    background: #1f3b73 !important;
+    border: none !important;
+    padding: 10px 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.card .btn-primary:hover {
+    background: #10274a !important;
+}
+
+/* ICON BADGES FOR DIFFICULTY */
+
+/* Reset badge to allow icons */
+.badge {
+    position: relative;
+    padding-left: 26px !important;
+}
+
+/* Beginner — ⛰️ */
+.badge.bg-success::before {
+    content: " ⛰️ ";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+}
+
+/* Intermediate — 🎿 */
+.badge.bg-primary::before {
+    content: " 🎿 ";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+}
+
+/* Advanced — ⚠️ */
+.badge.bg-danger::before {
+    content: " ⚠️ ";
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+}
+
+
+/* ===================================================
+   DIFFICULTY COLOR GLOW FOR SLOPE CARDS
+=================================================== */
+
+.card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Base hover lift */
+.card:hover {
+    transform: translateY(-6px);
+}
+
+/* BEGINNER glow */
+.card.slope-beginner:hover {
+    box-shadow: 0 0 22px 10px rgba(30,163,92,0.45) !important;
+}
+
+/* INTERMEDIATE glow */
+.card.slope-intermediate:hover {
+    box-shadow: 0 0 22px 10px rgba(43,108,176,0.45) !important;
+}
+
+/* ADVANCED glow */
+.card.slope-expert:hover,
+.card.slope-advanced:hover {
+    box-shadow: 0 0 22px 10px rgba(214,69,69,0.45) !important;
+}
+
+/* ============================
+   REPORTS PAGE STYLING
+============================ */
+
+/* Page wrapper */
+.reports-page {
+    margin-top: 20px;
+}
+
+/* Title section */
+.reports-page h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--ss-blue);
+}
+
+/* "Latest Hazards" subtitle */
+.reports-page h2 {
+    margin-top: 30px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--ss-blue-dark);
+    border-bottom: 3px solid var(--ss-gold);
+    display: inline-block;
+    padding-bottom: 4px;
+}
+
+/* Each report card */
+.reports-page .list-group-item {
+    background: white !important;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    transition: transform .2s ease, box-shadow .25s ease;
+}
+
+/* Hover lift */
+.reports-page .list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+
+/* Report title */
+.reports-page .list-group-item h5 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ss-blue);
+}
+
+/* Username + description */
+.reports-page .list-group-item small,
+.reports-page .list-group-item p {
+    font-size: 0.95rem;
+}
+
+/* Badge styling — winter colors */
+.report-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+/* Condition-specific colors */
+.report-badge.obstacle { background: #d9534f; color: white; }
+.report-badge.groomed  { background: #0275d8; color: white; }
+.report-badge.icy      { background: #5bc0de; color: white; }
+.report-badge.powder   { background: #00bfff; color: white; }
+.report-badge.moguls   { background: #343a40; color: white; }
+.report-badge.granular { background: #6f42c1; color: white; }
+.report-badge.thin     { background: #ffc107; color: black; }
+.report-badge.packed   { background: #0d6efd; color: white; }
+.report-badge.wet      { background: #20c997; color: white; }
+.report-badge.closed   { background: #000; color: white; }
+
+/* Icons inside badges */
+.report-badge i {
+    font-size: 0.8rem;
+}
+
+/* Submit New Report button */
+.reports-page .btn-warning {
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px;
+}
+
+/* Modal styling */
+#addReportModal .modal-content {
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+#addReportModal .modal-header {
+    background: var(--ss-blue);
+    color: white;
+    border-radius: 14px 14px 0 0;
+}
+
+#addReportModal .btn-warning {
+    background: var(--ss-gold);
+    border-color: var(--ss-gold);
+    font-weight: 600;
+}
+
+/* ================================
+   CLEAN MINIMAL FOOTER
+================================ */
+footer.ss-footer {
+    width: 100%;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #48607c;
+
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+
+    position: relative;
+    margin-top: 60px;
+
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.06);
+}
+
