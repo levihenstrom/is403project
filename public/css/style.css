@@ -782,6 +782,167 @@ nav.navbar {
 }
 
 
+/* ==============================================
+   Dashboard — Large Hero Banner with Text Overlay
+================================================= */
 
+.dashboard-page .dashboard-hero {
+    background-image: url('/images/dashboard-hero.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 
+    height: 330px; /* bigger hero */
+    border-radius: 22px;
+    margin-bottom: 45px;
 
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+}
+
+/* Frosted blue overlay for readability */
+.dashboard-page .dashboard-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 69, 122, 0.30); /* same blue tint as landing */
+    backdrop-filter: blur(1.5px);
+    border-radius: inherit;
+}
+
+/* TEXT ON TOP OF HERO */
+.dashboard-page .dashboard-hero-text {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    z-index: 2;
+    color: white;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.55);
+}
+
+.dashboard-page .dashboard-hero-text h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.dashboard-page .dashboard-hero-text p {
+    font-size: 1.25rem;
+    opacity: 0.95;
+}
+
+/* Dashboard Hero — Gold Text */
+.dashboard-page .dashboard-hero-text h1 {
+    color: var(--ss-gold) !important;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.4);
+}
+
+.dashboard-page .dashboard-hero-text p {
+    color: #ffffff !important;
+    opacity: 0.9;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+/* Latest Reports section refinement */
+.dashboard-page h2 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--ss-blue);
+    margin-top: 55px; /* moves it down from cards */
+    margin-bottom: 18px;
+}
+
+/* gold underline accent */
+.dashboard-page h2::after {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 4px;
+    background: var(--ss-gold);
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+/* Better-looking list items */
+.dashboard-page .list-group-item {
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    font-size: 1rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    border: none;
+}
+
+.dashboard-page .list-group-item:hover {
+    background: #f0f6ff;
+    transform: translateY(-1px);
+}
+
+.dashboard-page .dashboard-hero {
+    height: 350px;
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+    perspective: 1000px; /* enables 3D space */
+}
+
+body {
+    background: linear-gradient(to bottom, #eef4fa, #f8fbff) !important;
+}
+
+.dashboard-page .card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-page .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.14);
+}
+
+.dashboard-page h2 {
+    position: relative;
+}
+
+.dashboard-page h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 60px;
+    height: 4px;
+    background: var(--ss-gold);
+    border-radius: 4px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.dashboard-page h2:hover::after {
+    transform: scaleX(1);
+}
+
+.dashboard-hero {
+    border-radius: 26px !important;
+    border: 1px solid rgba(255,255,255,0.35);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255,255,255,0.25) !important;
+    backdrop-filter: blur(4px);
+}
+
+.dashboard-page .list-group-item {
+    background: white !important;
+    border-radius: 14px;
+    border: none;
+    padding: 16px 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    transition: all 0.2s ease;
+    font-size: 1.05rem;
+}
+
+.dashboard-page .list-group-item:hover {
+    transform: translateY(-3px);
+    background: #f7fbff !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
