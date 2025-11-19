@@ -88,7 +88,7 @@ app.post('/login', async (req, res) => {
     // 3. If successful: req.session.user = { user_id: 1, username: 'testuser', role: 'User' };
     
     // Placeholder success:
-    req.session.user = { user_id: 1, username: 'Lincoln', role: 'User' };
+    req.session.user = { user_id: 1, username: 'Lincoln', role: 'User', date_created: '2024-09-08' };
     res.redirect('/dashboard');
 
     // Placeholder failure:
@@ -132,17 +132,11 @@ app.get('/dashboard', requireLogin, (req, res) => {
 // GET /slopes: Display all slopes (Lincoln/Rylee)
 app.get('/slopes', requireLogin, async (req, res) => {
     // **DB query to fetch all slopes goes here**
-    const mockSlopes = [
-        { slope_id: 1, run_name: 'The Grotto', location: 'Resort X', difficulty: 'Advanced', condition: 'Fresh Powder', created_by: 1 },
-        { slope_id: 2, run_name: 'Bunny Hill', location: 'Resort X', difficulty: 'Beginner', condition: 'Groomed', created_by: 2 }
+    const mockSlopesAR = [
+        { slope_id: 1, run_name: 'The Grotto', area: 'Mineral Basin', resort: 'Snowbird', difficulty: 'Advanced', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true },
+        { slope_id: 2, run_name: 'Bunny Hill', area: 'Gad Valley', resort: 'Snowbird', difficulty: 'Beginner', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true }
     ];
-    res.render('slopes', { pageTitle: 'Slopes', slopes: mockSlopes });
-});
-
-// POST /slopes: Create new slope (CRUD - Lincoln)
-app.post('/slopes', requireLogin, async (req, res) => {
-    // **DB insert logic goes here**
-    res.redirect('/slopes');
+    res.render('slopes', { pageTitle: 'Slopes', slopes: mockSlopesAR });
 });
 
 // GET /reports: Display all reports (Lincoln/Rylee)
@@ -151,25 +145,34 @@ app.get('/reports', requireLogin, async (req, res) => {
     const mockReports = [
         { report_id: 1, slope_id: 1, slope_name: 'The Grotto', user_id: 1, username: 'RyleeDev', ice: false, obstacle: true, powder: true, closed: false, description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.', created_time: new Date() }
     ];
-    res.render('reports', { pageTitle: 'Reports', reports: mockReports });
+    res.render('reports', {
+        pageTitle: 'Reports',
+        reports: mockReports,
+        runs: [{run_name: "Chickadee"}, {run_name: "Baby Thunder"}]
+    });
 });
 
 // POST /reports: Create new report (CRUD - Lincoln)
-app.post('/reports', requireLogin, async (req, res) => {
+app.post('/reports/<%= user_id %>', requireLogin, async (req, res) => {
     // **DB insert logic goes here**
     res.redirect('/reports');
+});
+
+// POST /reports: Update profile
+app.post('/profile', requireLogin, async (req, res) => {
+    // **DB insert logic goes here**
+    res.redirect('/profile');
 });
 
 // GET /profile: Display user profile (Lincoln/Rylee)
 app.get('/profile', requireLogin, async (req, res) => {
     // **DB queries for user's reports and slopes go here**
-    const mockUserSlopes = [{ slope_id: 1, run_name: 'The Grotto', location: 'Resort X' }];
     const mockUserReports = [{ report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }];
 
     res.render('profile', { 
         pageTitle: 'Profile', 
-        userSlopes: mockUserSlopes, 
-        userReports: mockUserReports 
+        userReports: mockUserReports,
+        resorts: [ { resort_name : "Snowbird"}, {resort_name : "Brighton"}, {resort_name : "Sundance"}, {resort_name : "Alta"}]
     });
 });
 
