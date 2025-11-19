@@ -391,6 +391,84 @@ nav.navbar {
     padding: 140px 40px !important; /* increased from ~90px → 140px */
 }
 
+/* ==============================================
+   SlopeSense — Login Page Styling (TARGETED)
+   Only affects .login-page and its children
+================================================= */
+
+
+.login-page {
+    padding-top: 80px;
+    padding-bottom: 120px;
+    display: block; /* prevents vertical squeezing */
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+/* Frosted-glass card */
+.login-page .card {
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(12px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18) !important;
+}
+
+/* Title style to match landing hero text */
+.login-page .card-title {
+    font-weight: 800;
+    color: var(--ss-blue);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+/* Input fields */
+.login-page .form-control {
+    border-radius: 12px !important;
+    padding: 12px !important;
+    border: 1px solid #d6deea !important;
+    transition: all 0.25s ease !important;
+}
+
+.login-page .form-control:focus {
+    border-color: var(--ss-blue) !important;
+    box-shadow: 0 0 10px rgba(30, 86, 160, 0.35) !important;
+}
+
+/* Labels */
+.login-page .form-label {
+    font-weight: 600 !important;
+    color: #2e3a4e !important;
+}
+
+/* Login button */
+.login-page .btn-success {
+    background-color: var(--ss-blue) !important;
+    border-color: var(--ss-blue) !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    transition: all 0.25s ease;
+}
+
+.login-page .btn-success:hover {
+    background-color: var(--ss-blue-dark) !important;
+    transform: translateY(-2px);
+}
+
+/* Sign-up link */
+.login-page a {
+    color: var(--ss-blue) !important;
+    font-weight: 600;
+}
+
+.login-page a:hover {
+    text-decoration: underline;
+}
+
+
+
 
 
 
