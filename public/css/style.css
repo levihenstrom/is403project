@@ -1239,3 +1239,42 @@ footer.ss-footer {
     box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.06);
 }
 
+/* Sticky Header Wrapper */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* Sticky Frosted Navbar */
+nav.navbar {
+    position: sticky !important;
+    top: 0;
+    z-index: 999;
+}
+
+/* Base look for all report cards */
+.list-group-item {
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: 0.3s ease;
+}
+
+/* 🎯 Obstacle, Thin Cover, Packed, Wet, Groomed, etc. may all use bg-danger */
+.list-group-item:has(.bg-danger) {
+    background: rgba(217, 83, 79, 0.12);
+    border-left: 6px solid #d9534f;
+}
+
+/* 🎯 Powder (your blue badge) */
+.list-group-item:has(.bg-info) {
+    background: rgba(13, 110, 253, 0.12);
+    border-left: 6px solid #0d6efd;
+}
+
+/* 🎯 Moguls */
+.list-group-item:has(.bg-dark) {
+    background: rgba(52, 58, 64, 0.12);
+    border-left: 6px solid #343a40;
+}
