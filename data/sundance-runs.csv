@@ -1,0 +1,67 @@
+﻿area_id,run_name,difficulty,is_open,is_terrain_park,backcountry_access,bootpack_req
+7,Hill's Headwall,advanced,FALSE,FALSE,FALSE,FALSE
+7,Bearclaw,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Wild Flower,intermediate,FALSE,FALSE,FALSE,FALSE
+7,No Excuses,advanced,FALSE,FALSE,FALSE,FALSE
+7,Freddies,advanced,FALSE,FALSE,FALSE,FALSE
+7,Holman's Hollow,advanced,FALSE,FALSE,FALSE,FALSE
+7,Snowstakes,advanced,FALSE,FALSE,FALSE,FALSE
+7,Roundup,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Cassidy Traverse,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Quickdraw,advanced,FALSE,FALSE,FALSE,FALSE
+7,Amy's Ridge,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Hawkeye,advanced,FALSE,FALSE,FALSE,FALSE
+7,Bear Claw,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Junior's,advanced,FALSE,FALSE,FALSE,FALSE
+7,Grizzly Ridge,advanced,FALSE,FALSE,FALSE,FALSE
+7,Grizzly Bowl,advanced,FALSE,FALSE,FALSE,FALSE
+7,Badlands,advanced,FALSE,FALSE,FALSE,FALSE
+7,Tombstone,advanced,FALSE,FALSE,FALSE,FALSE
+7,Drop Out,advanced,FALSE,FALSE,FALSE,FALSE
+7,Redfinger,advanced,FALSE,FALSE,FALSE,FALSE
+7,Far East,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Bishop's Bowl,advanced,FALSE,FALSE,FALSE,FALSE
+7,Shauna's,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Shauna's Secret,advanced,FALSE,FALSE,FALSE,FALSE
+7,Jaime's,advanced,FALSE,FALSE,FALSE,FALSE
+7,The Sting,advanced,FALSE,FALSE,FALSE,FALSE
+7,Tango,advanced,FALSE,FALSE,FALSE,FALSE
+7,Wonderbox,expert,FALSE,FALSE,FALSE,FALSE
+7,Vertigo,expert,FALSE,FALSE,FALSE,FALSE
+7,Pipeline,advanced,FALSE,FALSE,FALSE,FALSE
+7,Sidewinder,begginer,FALSE,FALSE,FALSE,FALSE
+7,Brightside,intermediate,FALSE,FALSE,FALSE,FALSE
+7,Slingshot,advanced,FALSE,FALSE,FALSE,FALSE
+8,Moonrise,begginer,FALSE,FALSE,FALSE,FALSE
+8,Bluebird,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Aperture,begginer,FALSE,FALSE,FALSE,FALSE
+8,Refuge,begginer,FALSE,FALSE,FALSE,FALSE
+8,Lone Pine,begginer,FALSE,FALSE,FALSE,FALSE
+8,Draw,begginer,FALSE,FALSE,FALSE,FALSE
+8,Honey Butter,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Hot Bread,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Long Hollow,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Diamondback,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Broadway,begginer,FALSE,FALSE,FALSE,FALSE
+8,Mandan,expert,FALSE,FALSE,FALSE,FALSE
+8,Expedition,advanced,FALSE,FALSE,FALSE,FALSE
+8,Boot Hill,advanced,FALSE,FALSE,FALSE,FALSE
+8,Marmot Gulch,advanced,FALSE,FALSE,FALSE,FALSE
+8,Top Gun Bowl,advanced,FALSE,FALSE,FALSE,FALSE
+8,Wedding Ring,advanced,FALSE,FALSE,FALSE,FALSE
+8,Top Gun,advanced,FALSE,FALSE,FALSE,FALSE
+8,Beyond the Edge,expert,FALSE,FALSE,FALSE,FALSE
+8,Cotton Mouth ,advanced,FALSE,FALSE,FALSE,FALSE
+8,Panorama,begginer,FALSE,FALSE,FALSE,FALSE
+8,Montoya,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Flatnose,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Outlaw,begginer,FALSE,FALSE,FALSE,FALSE
+8,Maverick,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Rollers ,intermediate,FALSE,FALSE,FALSE,FALSE
+8,Red's Canyons,begginer,FALSE,FALSE,FALSE,FALSE
+8,Stampede,begginer,FALSE,FALSE,FALSE,FALSE
+8,Center Aisle,begginer,FALSE,FALSE,FALSE,FALSE
+8,Sunnyside Cat Track,begginer,FALSE,FALSE,FALSE,FALSE
+8,Black Forest,expert,FALSE,FALSE,FALSE,FALSE
+8,Lower Stampede,begginer,FALSE,FALSE,FALSE,FALSE
+8,Bandit,begginer,FALSE,FALSE,FALSE,FALSE
