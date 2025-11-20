@@ -485,46 +485,62 @@ app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
     }
 });
 
-app.post('/editReport/<%= slope.slope_id %>', requireLogin, async (req, res) => {
-    // **DB insert logic goes here**
-    res.redirect('/profile');
-});
-
-app.post('/deleteReport/<%= slope.slope_id %>', requireLogin, async (req, res) => {
-    // **DB insert logic goes here**
-    res.redirect('/profile');
-});
 
 // GET /reports: Display all reports
+// app.get('/reports', requireLogin, async (req, res) => {
+//     // **DB query to fetch all reports goes here**
+//     const mockReports = [{
+//         report_id: 1,
+//         slope_id: 1,
+//         slope_name: 'The Grotto',
+//         user_id: 1,
+//         username: 'testPerson',
+//         area_name: 'area',
+//         resort_name: 'resort',
+//         obstacle: true,
+//         description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.',
+//         groomed: false,
+//         icy: true,
+//         powder: false,
+//         moguls: false,
+//         granular: true,
+//         thin_cover: true,
+//         packed: false,
+//         wet: false,
+//         created_time: new Date()
+//     }]; // Need to query for slope name and username
+//     res.render('reports', {
+//         pageTitle: 'Reports',
+//         reports: mockReports,
+//         resorts: [{resort_name: "Snowbird"}, {resort_name: "Sundance"}],
+//         areas: [{area_name: "Area1", resort_name: "Snowbird"},{area_name: "Area2", resort_name: "Snowbird"},{area_name: "Areaz", resort_name: "Sundance"}],
+//         runs: [{run_name: "Chickadee", area_name: "Area1", resort_name: "Snowbird"}, {run_name: "Baby Thunder", area_name: "Areaz", resort_name: "Sundance"}]
+//     });
+// });
+
 app.get('/reports', requireLogin, async (req, res) => {
-    // **DB query to fetch all reports goes here**
-    const mockReports = [{
-        report_id: 1,
-        slope_id: 1,
-        slope_name: 'The Grotto',
-        user_id: 1,
-        username: 'testPerson',
-        area_name: 'area',
-        resort_name: 'resort',
-        obstacle: true,
-        description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.',
-        groomed: false,
-        icy: true,
-        powder: false,
-        moguls: false,
-        granular: true,
-        thin_cover: true,
-        packed: false,
-        wet: false,
-        created_time: new Date()
-    }]; // Need to query for slope name and username
+  try {
+
+    const reports = await knex('reports')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .select(
+        'reports.*',
+        'users.user_id as user_user_id',
+        'users.username',
+        'users.email',
+        'runs.run_name'
+      );
+
     res.render('reports', {
-        pageTitle: 'Reports',
-        reports: mockReports,
-        resorts: [{resort_name: "Snowbird"}, {resort_name: "Sundance"}],
-        areas: [{area_name: "Area1", resort_name: "Snowbird"},{area_name: "Area2", resort_name: "Snowbird"},{area_name: "Areaz", resort_name: "Sundance"}],
-        runs: [{run_name: "Chickadee", area_name: "Area1", resort_name: "Snowbird"}, {run_name: "Baby Thunder", area_name: "Areaz", resort_name: "Sundance"}]
+      pageTitle: 'Reports',
+      layout: 'public',
+      reports: reports
     });
+  } catch (err) {
+    console.error("DB ERROR:", err);
+    if (!res.headersSent) res.status(500).send("Database error: " + err.message);
+  }
 });
 
 // POST /reports: Create new report (CRUD - Lincoln)
