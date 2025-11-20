@@ -28,16 +28,14 @@
     </div>
 </div>
 
-
-
 <% if (locals.reports && reports.length) { %>
     <div class="list-group">
     <h2>Your Submitted Slopes</h2>
         <% reports.forEach(report => { %>
             <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><%= report.slope_name || 'Slope ID ' + report.slope_id %></h5>
-                    <small class="text-muted"><%= new Date(report.created_time).toLocaleString() %></small>
+                    <h5 class="mb-1"><%= report.run_name || 'Slope ID ' + report.run_id %></h5>
+                    <small class="text-muted"><%= new Date(report.date_reported).toLocaleString() %></small>
                 </div>
                 <p class="mb-1">
                     <strong>Reported by:</strong> <%= report.username || 'Anonymous' %>
@@ -73,9 +71,8 @@
                 </p>
                 <small><%= report.description %></small>
                 <div class="mt-2">
-                    <button class="btn btn-sm btn-outline-warning">Edit</button>
-                    <form action="/reports/<%= report.report_id %>?_method=DELETE" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    <form action="/deleteReport/<%= report.report_id %>/delete" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </div>
             </div>
@@ -171,6 +168,4 @@
       </div>
     </div>
   </div>
-  
-  
 </div>
