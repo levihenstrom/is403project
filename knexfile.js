@@ -11,7 +11,7 @@ module.exports = {
       },
       migrations: {
         directory: './migrations'
-      }
+      } 
     },
   
     production: {

@@ -4,23 +4,129 @@
     <h1>Mountain Runs</h1>
 </div>
 
+<!-- Resort dropdown + submit button -->
+<form method="POST" action="/displaySlopes" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+            <label for="resortSelect" class="form-label">Select a resort</label>
+            <select id="resortSelect" name="resort_id" class="form-select" required>                
+                <!-- Default placeholder option -->
+                <option value="" disabled <%= !locals.selectedResortId ? 'selected' : '' %>>                    -- Select a resort --
+                </option>
+
+                <% if (locals.resorts && resorts.length) { %>
+                    <% resorts.forEach(r => { %>
+                        <option 
+                            value="<%= r.resort_id %>" 
+                            <%= locals.selectedResortId 
+                                && String(locals.selectedResortId) === String(r.resort_id)
+                                ? 'selected' 
+                                : '' 
+                            %>>
+                            <%= r.resort_name %>
+                        </option>
+                    <% }) %>
+                <% } else { %>
+                    <option disabled>No resorts found</option>
+                <% } %>
+
+            </select>
+
+            <label for="areaSelect" class="form-label">Select an Area</label>
+            <select id="areaSelect" name="area_id" class="form-select">
+                <!-- Default option: All Areas -->
+                <option value="" <%= !locals.selectedAreaId ? 'selected' : '' %>>
+                    All areas
+                </option>
+
+                <% if (locals.areas && areas.length) { %>
+                    <% areas.forEach(a => { %>
+                        <option 
+                            value="<%= a.area_id %>" 
+                            <%= locals.selectedAreaId 
+                                && String(locals.selectedAreaId) === String(a.area_id)
+                                ? 'selected' 
+                                : '' 
+                            %>>
+                            <%= a.area_name %>
+                        </option>
+                    <% }) %>
+                <% } else { %>
+                    <option disabled>No areas found</option>
+                <% } %>
+            </select>
+
+
+        </div>
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-primary">Show Runs</button>        </div>    </div>
+</form>
+<script>
+    const resortSelect = document.getElementById('resortSelect');
+    const areaSelect = document.getElementById('areaSelect');
+
+    async function loadAreasForResort(resortId) {
+        // Reset area dropdown to "All areas"
+        areaSelect.innerHTML = `
+            <option value="" ${!('<%= locals.selectedAreaId %>' || '').trim() ? 'selected' : ''}>
+                All areas
+            </option>
+        `;
+
+        if (!resortId) return; // nothing else to load
+
+        try {
+            const res = await fetch(`/api/resorts/${resortId}/areas`);
+            if (!res.ok) return;
+
+            const areas = await res.json();
+
+            areas.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.area_id;
+                opt.textContent = a.area_name;
+                areaSelect.appendChild(opt);
+            });
+        } catch (err) {
+            console.error('Error loading areas', err);
+        }
+    }
+
+    // When resort changes, update areas immediately
+    resortSelect.addEventListener('change', () => {
+        const resortId = resortSelect.value;
+        loadAreasForResort(resortId);
+    });
+</script>
+
 <% if (locals.slopes && slopes.length) { %>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <% slopes.forEach(slope => { %>
             <div class="col">
-               <div class="card h-100 shadow-sm slope-<%= slope.difficulty.toLowerCase() %>">
+                <div class="card h-100 shadow-sm slope-<%= slope.difficulty.toLowerCase() %>">
                     <div class="card-body">
                         <h5 class="card-title"><%= slope.run_name %></h5>
-                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.area %></h6>
-                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.resort %></h6>
+
+                        <!-- area_name comes from the JOIN (areas.area_name) -->
+                        <h6 class="card-subtitle mb-2 text-muted"><%= slope.area_name %></h6>
+
+                        <!-- We already know the resort from the dropdown, so this line can be removed -->
+                        <!-- <h6 class="card-subtitle mb-2 text-muted"><%= slope.resort %></h6> -->
+
                         <p class="card-text">
-                            <strong>Difficulty:</strong> <span class="badge bg-<%= 
+                            <strong>Difficulty:</strong> 
+                            <span class="badge bg-<%= 
                                 slope.difficulty.toLowerCase().includes('beginner') ? 'success' : 
                                 slope.difficulty.toLowerCase().includes('intermediate') ? 'primary' : 
-                                'danger' 
-                            %>"><%= slope.difficulty %></span><br>
+                                slope.difficulty.toLowerCase().includes('expert')        ? 'dark'    :
+                                                                                            'danger'
+                            %>">
+                                <%= slope.difficulty %>
+                            </span><br>
                         </p>
-                        <a href="/slopeDetails/<%= slope.slope_id %>" class="btn btn-primary">More Details</a>
+
+                        <!-- Use run_id, not slope_id -->
+                        <a href="/slopeDetails/<%= slope.run_id %>" class="btn btn-primary">Reports</a>
                     </div>
                 </div>
             </div>
@@ -28,6 +134,10 @@
     </div>
 <% } else { %>
     <div class="alert alert-info text-center">
-        No slopes have been added yet. Be the first!
+        <% if (locals.selectedResortId) { %>
+            No slopes found for this resort.
+        <% } else { %>
+            Select a resort above to view its runs.
+        <% } %>
     </div>
 <% } %>

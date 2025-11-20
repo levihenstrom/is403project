@@ -350,14 +350,108 @@ app.get('/dashboard', requireLogin, (req, res) => {
     res.render('dashboard', { pageTitle: 'Dashboard' });
 });
 
-// GET /slopes: Display all slopes
+// 1) Show the dropdown (no runs yet)
+// 1) Show the dropdown (no runs yet)
 app.get('/slopes', requireLogin, async (req, res) => {
-    // **DB query to fetch all slopes goes here**
-    const mockSlopesAR = [
-        { run_id: 1, run_name: 'The Grotto', area: 'Mineral Basin', resort: 'Snowbird', difficulty: 'Advanced', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true },
-        { run_id: 2, run_name: 'Bunny Hill', area: 'Gad Valley', resort: 'Snowbird', difficulty: 'Beginner', is_open: true, is_terrain_park: true, back_country_access: true, bootpack_req: true, base_area: "base_area1", zone_name: "zone name 1", city: "Salt Lake City", state: "Utah", website: "snowbird.com", total_acres: 543, canyon_name: "Little_Cottonwood", ski_patrol_phone: "801-556-5543", has_night_skiing: true }
-    ];
-    res.render('slopes', { pageTitle: 'Slopes', slopes: mockSlopesAR });
+    const resorts = await knex('resorts')
+        .select('resort_id', 'resort_name')
+        .orderBy('resort_name');
+
+    res.render('slopes', { 
+        pageTitle: 'Slopes',
+        resorts,
+        slopes: null,            // no runs yet
+        areas: [],               // no areas yet
+        selectedResortId: null,  // nothing selected yet
+        selectedAreaId: null
+    });
+});
+// 2) Handle form submission and show runs for selected resort
+app.post('/displaySlopes', requireLogin, async (req, res) => {
+    const resortId = req.body.resort_id;
+    const areaId = req.body.area_id || null;  // <-- read area_id from form
+
+    // Guard: if user somehow bypasses required or sends empty value
+    if (!resortId) {
+        const resorts = await knex('resorts')
+            .select('resort_id', 'resort_name')
+            .orderBy('resort_name');
+
+        return res.render('slopes', {
+            pageTitle: 'Slopes',
+            resorts,
+            slopes: null,
+            areas: [],
+            selectedResortId: null,
+            selectedAreaId: null
+        });
+    }
+
+    try {
+        const resorts = await knex('resorts')
+            .select('resort_id', 'resort_name')
+            .orderBy('resort_name');
+
+        // areas for this resort (for the area dropdown)
+        const areas = await knex('areas')
+            .where('resort_id', resortId)
+            .orderBy('area_name');
+
+        // build base query
+        let slopesQuery = knex('runs')
+            .join('areas', 'runs.area_id', 'areas.area_id')
+            .select(
+                'runs.run_id',
+                'runs.run_name',
+                'runs.difficulty',
+                'runs.is_open',
+                'runs.is_terrain_park',
+                // ⚠ make sure this column name matches your table. If not, remove this line:
+                'runs.backcountry_access',
+                'runs.bootpack_req',
+                'areas.area_name',
+                'areas.area_id',
+                'areas.resort_id'
+            )
+            .where('areas.resort_id', resortId);
+
+        // optional filter by area if one is selected
+        if (areaId) {
+            slopesQuery = slopesQuery.andWhere('areas.area_id', areaId);
+        }
+
+        const slopes = await slopesQuery
+            .orderBy('areas.area_name')
+            .orderBy('runs.run_name');
+
+        res.render('slopes', {
+            pageTitle: 'Slopes',
+            resorts,
+            areas,
+            slopes,
+            selectedResortId: resortId,
+            selectedAreaId: areaId
+        });
+    } catch (err) {
+        console.error('Error in /displaySlopes for resort', resortId, 'area', areaId, err);
+        res.status(500).send('Error loading slopes');
+    }
+});
+
+// API: get areas for a given resort (used by the slopes page JS)
+app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
+    const resortId = req.params.id;
+
+    try {
+        const areas = await knex('areas')
+            .where('resort_id', resortId)
+            .orderBy('area_name');
+
+        res.json(areas);
+    } catch (err) {
+        console.error('Error fetching areas for resort', resortId, err);
+        res.status(500).json({ error: 'Error loading areas' });
+    }
 });
 
 app.post('/editReport/<%= slope.slope_id %>', requireLogin, async (req, res) => {
@@ -407,7 +501,6 @@ app.post('/reports/<%= user_id %>', requireLogin, async (req, res) => {
     // **DB insert logic goes here**
     res.redirect('/reports');
 });
-  
 
 // Error Handling (404)
 app.use((req, res, next) => {

@@ -29,8 +29,6 @@ function toBool(val) {
  */
 exports.seed = async function (knex) {
   // Clear child → parent
-  await knex('reports').del();
-  await knex('users').del();
   await knex('runs').del();
   await knex('areas').del();
   await knex('resorts').del();

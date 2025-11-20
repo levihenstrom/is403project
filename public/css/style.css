@@ -1135,8 +1135,12 @@ h1 {
 }
 
 /* ADVANCED glow */
-.card.slope-expert:hover,
+
 .card.slope-advanced:hover {
+    box-shadow: 0 0 22px 10px rgba(214, 70, 70,0.45) !important;
+}
+/* EXPERT glow */
+.card.slope-expert:hover {
     box-shadow: 0 0 22px 10px rgba(20, 16, 16, 0.45) !important;
 }
 

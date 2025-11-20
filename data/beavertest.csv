@@ -1,0 +1,49 @@
+﻿area_id,run_name,difficulty,is_open,is_terrain_park,backcountry_access,bootpack_req
+1,Little Beaver,Beginner,FALSE,FALSE,FALSE,FALSE
+1,Jump Hill,Beginner/Advanced,FALSE,FALSE,FALSE,FALSE
+1,race course,Intermediate,FALSE,FALSE,FALSE,FALSE
+1,Cotton Tail,Beginner,FALSE,FALSE,FALSE,FALSE
+1,Goat Trail ,Beginner,FALSE,FALSE,FALSE,FALSE
+2,Canyon View,Advanced,FALSE,FALSE,TRUE,FALSE
+2,Robinson's Rim,Advanced,FALSE,FALSE,FALSE,FALSE
+2,School Hill,Advanced,FALSE,FALSE,FALSE,FALSE
+2,South Face,Advanced,FALSE,FALSE,FALSE,FALSE
+2,North Face,Advanced,FALSE,FALSE,FALSE,FALSE
+2,The Stump,Intermediate,FALSE,FALSE,FALSE,FALSE
+2,The Ridge,Intermediate,FALSE,FALSE,FALSE,FALSE
+2,Old Thunder,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Grews's Groove,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Rock Garden,Intermediate,FALSE,FALSE,FALSE,FALSE
+2,Upper Bypass,Intermediate,FALSE,FALSE,FALSE,FALSE
+2,Lower Bypass,Intermediate,FALSE,FALSE,FALSE,FALSE
+2,Ego Trip,Advanced,FALSE,FALSE,TRUE,FALSE
+2,Nasty,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Harry's Hollow,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Stan's Bonanza,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Lue's,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Beaver's Powder,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Gentle Ben,Beginner,FALSE,FALSE,FALSE,FALSE
+2,Gentle Ben Terrain Park,Terrain Park,FALSE,TRUE,FALSE,FALSE
+2,Black Forrest,Advanced,FALSE,FALSE,FALSE,FALSE
+2,North Fields,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Teddy'sFrolic,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Grand Canyon,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Fine Wine,Advanced,FALSE,FALSE,FALSE,FALSE
+2,Dead Horse,Beginner,FALSE,FALSE,FALSE,FALSE
+2,Lower Dead Horse,Beginner,FALSE,FALSE,FALSE,FALSE
+2,Bypass,Beginner,FALSE,FALSE,FALSE,FALSE
+3,Long Hollow Ridge,Beginner,FALSE,FALSE,FALSE,FALSE
+3,Easy Street,Beginner,FALSE,FALSE,FALSE,FALSE
+3,Sunshine,Beginner,FALSE,FALSE,FALSE,FALSE
+3,Blind Bull,Beginner,FALSE,FALSE,FALSE,FALSE
+3,Skid Road,Advanced,FALSE,FALSE,FALSE,FALSE
+3,Lone Pine,Advanced,FALSE,FALSE,FALSE,FALSE
+3,Shady,Intermediate,FALSE,FALSE,FALSE,FALSE
+3,Lower Red Tail,Intermediate,FALSE,FALSE,FALSE,FALSE
+3,Citizen Kent's Tree's,Advanced,FALSE,FALSE,FALSE,FALSE
+3,Upper Red Tail,Intermediate,FALSE,FALSE,FALSE,FALSE
+3,TJ's Way,Advanced,FALSE,FALSE,FALSE,FALSE
+3,Tunnel of Love,Intermediate,FALSE,FALSE,FALSE,FALSE
+3,Ted's Rock,Intermediate,FALSE,FALSE,TRUE,FALSE
+3,Rodeo Grounds,Terrain Park,FALSE,TRUE,FALSE,FALSE
+3,Sour Grapes,Advanced,FALSE,FALSE,TRUE,FALSE

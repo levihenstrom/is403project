@@ -1,0 +1,167 @@
+﻿area_id,run_name,difficulty,is_open,is_terrain_park,backcountry_access,bootpack_req
+4,Upper Silver Fox,Expert,FALSE,FALSE,TRUE,FALSE
+4,Upper Primrose Path,Expert,FALSE,FALSE,FALSE,FALSE
+4,Upper Chip's Run,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,High Baldy Traverse,Expert,FALSE,FALSE,TRUE,TRUE
+4,High Ridge 3,Expert,FALSE,FALSE,FALSE,FALSE
+4,Chip's Run,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,West Baldy,Expert,FALSE,FALSE,FALSE,FALSE
+4,Venus Line,Expert,FALSE,FALSE,FALSE,FALSE
+4,Fields of Glory,Expert,FALSE,FALSE,FALSE,FALSE
+4,Thanks for the Memories,Expert,FALSE,FALSE,FALSE,FALSE
+4,Center of Gravity,Expert,FALSE,FALSE,FALSE,FALSE
+4,The Key Hole,Expert,FALSE,FALSE,FALSE,FALSE
+4,Gun Towers,Expert,FALSE,FALSE,FALSE,FALSE
+4,Shot,Expert,FALSE,FALSE,FALSE,FALSE
+4,Middle Chip's Run,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Hubba Bubba,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Primrose Split,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Chip's Bypass,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Lower Primrose Path,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Hot Foot Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Middle Men's,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Blackjack Traverse,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Blackjack Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Peruvian Gulch Trail ,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Chip's Face,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Willow's,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Lightning Tree Gullly,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Oh My God,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Lower Willow's,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Lowest Chip's,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Westward Ho,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Who Dunnit,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Who Cares,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Blackjack Snowbird Return,Advanced,FALSE,FALSE,FALSE,FALSE
+4,Condo & Bypass Rd Parking Access,Intermediate,FALSE,FALSE,FALSE,FALSE
+4,Lower Silver Fox,Advanced,FALSE,FALSE,TRUE,FALSE
+4,Route 4 Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Sunday Saddle Road,Intermediate,FALSE,FALSE,TRUE,FALSE
+5,Bookends Traverse,Advanced,FALSE,FALSE,FALSE,FALSE
+5,High Stakes,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Lone Star,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Blue By You,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Nash Flora Lode,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Bookmark Gully,Expert,FALSE,FALSE,TRUE,FALSE
+5,The Endoras,Expert,FALSE,FALSE,TRUE,FALSE
+5,Richie's Run,Expert,FALSE,FALSE,FALSE,FALSE
+5,Silver Dipper,Advanced,FALSE,FALSE,FALSE,FALSE
+5,White Diamonds,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Altar Bowl,Expert,FALSE,FALSE,TRUE,FALSE
+5,Almony Chutes,Expert,FALSE,FALSE,TRUE,TRUE
+5,Junior's Powder Paradise,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,White Diamonds,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,Bookends Bowl Return Road,Advanced,FALSE,FALSE,TRUE,FALSE
+5,Peruvian Gulch Road,Intermediate,FALSE,FALSE,TRUE,FALSE
+5,Not Quite Corn,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Lupine Loop,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,Double Down,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Chalmonix Bowl,Advanced,FALSE,FALSE,TRUE,FALSE
+5,49er Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Mount Baldy Trail,Expert,FALSE,FALSE,TRUE,TRUE
+5,Split Rock Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Chalmonix Chutes,Expert,FALSE,FALSE,FALSE,FALSE
+5,Bassanova,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,Bird's Nest,Intermediate,FALSE,FALSE,TRUE,FALSE
+5,Claimjumper,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,luckeyboy,Intermediate,FALSE,FALSE,FALSE,FALSE
+5,Ski Patrol Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+5,Livin' The Dream,Expert,FALSE,FALSE,FALSE,FALSE
+6,Adager,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Rothman Way,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Dalton's Draw,Expert,FALSE,FALSE,FALSE,FALSE
+6,Round The World Traverse,Expert,FALSE,FALSE,FALSE,FALSE
+6,Upper Mach Schnell,Expert,FALSE,FALSE,FALSE,FALSE
+6,Binx's Bumper,Expert,FALSE,FALSE,FALSE,FALSE
+6,Wilma's,Expert,FALSE,FALSE,FALSE,FALSE
+6,Cirque Traverse,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Tower,Expert,FALSE,FALSE,FALSE,FALSE
+6,Lower Cirque,Expert,FALSE,FALSE,FALSE,FALSE
+6,Glen's,Expert,FALSE,FALSE,FALSE,FALSE
+6,Middle Cirque,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Great Scott ,Expert,FALSE,FALSE,FALSE,FALSE
+6,Upper Cirque,Expert,FALSE,FALSE,FALSE,FALSE
+6,Wilbere Bowl ,Expert,FALSE,FALSE,FALSE,FALSE
+6,Barry Barry Steep,Expert,FALSE,FALSE,FALSE,FALSE
+6,Restaurnt Roll,Expert,FALSE,FALSE,FALSE,FALSE
+6,Gad Chutes,Expert,FALSE,FALSE,FALSE,FALSE
+6,Pucker Bush ,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Regulator Johnson,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Big Mountain Trail,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Old Ladies,Expert,FALSE,FALSE,FALSE,FALSE
+6,Shireen,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Mark Malu Fork,Intermediate,FALSE,FALSE,TRUE,FALSE
+6,Rasta Chutes,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Knuckelhead Traverse,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Pipeline Couloir,Expert,FALSE,FALSE,TRUE,TRUE
+6,Pipeline Bowl,Expert,FALSE,FALSE,TRUE,TRUE
+6,Goblin Gully,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Fields Cut Off,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Bonar's Pass,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Hoop's,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Upper Bassackwards,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Middle Bassackwards,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Election,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Gad Valley Road,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Regulator Gully,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Bicarbonate Gully,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Organ Grinder,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Lautrenoe,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Sneaky Pete,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Upper Big Emma,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Blue Angle,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Big Emma,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Middle Emma,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Dick Bass Highway,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Wilbere Ridge,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Harper's Ferry,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Lower Mach Schnell,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Harper's Ferry East,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Miner's Road,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Harper's Ferry,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Wilbere Cutoff,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Cat Crew Cutoff,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Bryce's Run,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Elbow Proper,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Tricep,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Jones Ave,Expert,FALSE,FALSE,FALSE,FALSE
+6,Get Serious Chute #1,Expert,FALSE,FALSE,TRUE,TRUE
+6,Get Serious Chute #2,Expert,FALSE,FALSE,TRUE,TRUE
+6,Get Serious Chute #3,Expert,FALSE,FALSE,TRUE,TRUE
+6,Carbonate,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Madam Annie's,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,West 2nd South On Ramp,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,S T H,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Gadzooks,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Banana's ,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,Red Lens Line,Expert,FALSE,FALSE,FALSE,FALSE
+6,Upper Tiger Tail,Expert,FALSE,FALSE,FALSE,FALSE
+6,High Saddle Traverse,Expert,FALSE,FALSE,TRUE,TRUE
+6,Boundary Bowl,Expert,FALSE,FALSE,TRUE,FALSE
+6,Thunder Bowl,Expert,FALSE,FALSE,FALSE,FALSE
+6,Temptation Chutes,Expert,FALSE,FALSE,TRUE,FALSE
+6,Low Saddle,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Ted's Bowl,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Middle Tiger Tail,Advanced,FALSE,FALSE,FALSE,FALSE
+6,The Fin,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Low Saddle,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Exit Gully,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Mushroom Land,Expert,FALSE,FALSE,FALSE,FALSE
+6,Gad 2 Return ,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Pearly Gates,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Thunder Alley,Advanced,FALSE,FALSE,FALSE,FALSE
+6,White Rabit,Expert,FALSE,FALSE,FALSE,FALSE
+6,Defiance Ledge,Expert,FALSE,FALSE,FALSE,FALSE
+6,Figure 8 Bowl,Expert,FALSE,FALSE,FALSE,FALSE
+6,Lazy Susan,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Tiny Tiger,Advanced,FALSE,FALSE,FALSE,FALSE
+6,Easy Street ,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Alice Avenue,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Bluebell,Intermediate,FALSE,FALSE,FALSE,FALSE
+6,West 2nd South,Beginner,FALSE,FALSE,FALSE,FALSE
+6,West 2nd Short,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Upper Mini Miners' Camp,Beginner,FALSE,FALSE,FALSE,FALSE
+6,West 2nd South Long,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Thunder Junction,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Lower Mini Miners' Camp,Beginner,FALSE,FALSE,FALSE,FALSE
+6,Lowest Bassackwards,Intermediate,FALSE,FALSE,FALSE,FALSE
