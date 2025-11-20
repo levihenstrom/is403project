@@ -8,9 +8,20 @@
         <p><strong>Username:</strong> <%= locals.user.username %></p>
         <p><strong>Email:</strong> <%= locals.user.email %></p>
         <p><strong>Name:</strong> <%= locals.user.first_name%> <%= locals.user.last_name %></p>
-        <p><strong>Birthday:</strong> <%= locals.user.birthday %></p>
-        <p><strong>Favorite Resort:</strong> <%= locals.user.fav_resort %></p>
+        <p><strong>Birthday:</strong>
+            <%= new Date(locals.user.birthday).toLocaleDateString('en-US') %>
+          </p>
+        <p><strong>Favorite Resort:</strong>
+                <% 
+                const fav = resorts.find(r => r.resort_id === user.fav_resort);
+                %>
+                <%= fav ? fav.resort_name : "None" %></p>
         <p><strong>Member Since:</strong> <%= new Date(locals.user.date_created).toDateString() %></p>
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= error %>
+            </div>
+          <% } %>          
         <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#updateUserModal">
             Edit Profile
         </button>
@@ -78,50 +89,88 @@
 
 <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateUserModalLabel">Submit Condition Report</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/profile/<%= locals.user.user_id %>" method="POST">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" value="<%= locals.user.username %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="<%= locals.user.email %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="text" class="form-control" id="password" name="password" value="<%= locals.user.password %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="first_name" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="<%= locals.user.first_name %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="<%= locals.user.last_name %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="birthday" class="form-label">Birthday</label>
-                        <input type="date" class="form-control" id="birthday" name="birthday" value="<%= locals.user.birthday %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fav_resort" class="form-label">Favortie Resort</label>
-                        <select class="form-select" id="fav_resort" name="fav_resort" required>
-                            <option value="">-- Select and option --</option>
-                            <% resorts.forEach(resort => { %>
-                                <option value="<%= resort.resort_name %>"> <%= resort.resort_name %></option>
-                            <% }); %>
-                            </select>
-                    </div>
-                    <button type="submit" class="btn btn-warning">Submit Report</button>
-                </form>
-            </div>
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateUserModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+  
+        <div class="modal-body">
+          <form action="/profile" method="POST">
+  
+            <!-- FIRST / LAST FIRST -->
+            <div class="mb-3">
+              <label for="first_name" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name" 
+                     value="<%= locals.user.first_name %>" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name" 
+                     value="<%= locals.user.last_name %>" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" 
+                     value="<%= locals.user.username %>" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" 
+                     value="<%= locals.user.email %>" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="text" class="form-control" id="password" name="password" 
+                     value="<%= locals.user.password %>" required>
+            </div>
+            <%
+            let birthdayValue = '';
+            if (locals.user && locals.user.birthday) {
+              const d = new Date(locals.user.birthday);
+              if (!isNaN(d.getTime())) {
+                // Format as YYYY-MM-DD for the date input
+                birthdayValue = d.toISOString().split('T')[0];
+              } else {
+                // Fallback if it's already a string like "2003-02-19"
+                birthdayValue = locals.user.birthday.toString().slice(0, 10);
+              }
+            }
+          %>
+          
+            <div class="mb-3">
+              <label for="birthday" class="form-label">Birthday</label>
+              <input type="date" class="form-control" id="birthday" name="birthday"
+                value="<%= birthdayValue || '' %>" required>
+
+            </div>
+  
+            <div class="mb-3">
+              <label for="fav_resort" class="form-label">Favorite Resort</label>
+              <select class="form-select" id="fav_resort" name="fav_resort" required>
+                <option value="">-- Select an option --</option>
+                <% resorts.forEach(resort => { %>
+                  <option 
+                    value="<%= resort.resort_id %>"
+                    <%= resort.resort_id === locals.user.fav_resort ? "selected" : "" %>>
+                    <%= resort.resort_name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+  
+            <button type="submit" class="btn btn-warning">Save Changes</button>
+          </form>
+        </div>
+  
+      </div>
     </div>
-</div>
+  </div>
+  
+  
 </div>

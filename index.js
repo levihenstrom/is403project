@@ -49,6 +49,20 @@ app.set('layout', 'public'); // Sets 'public.ejs' as the default layout
 // Middleware to expose user to all EJS views
 // Middleware to expose user to all EJS views + gate routes
 app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+  });
+app.use(async (req, res, next) => {
+    try {
+      const resorts = await knex('resorts').select('resort_id', 'resort_name');
+      res.locals.resorts = resorts;   // now `resorts` exists in ALL views
+    } catch (err) {
+      console.error('Error loading resorts list:', err);
+      res.locals.resorts = [];
+    }
+    next();
+});
+app.use((req, res, next) => {
     // Make user available in all views
     res.locals.user = req.session.user || null;
 
@@ -66,7 +80,6 @@ app.use((req, res, next) => {
     return res.render("login", { layout: 'public', error_message: "Please log in to access this page" });
 });
 
-
 // Simple Auth Check Middleware
 const requireLogin = (req, res, next) => {
     if (!req.session.user) {
@@ -77,7 +90,6 @@ const requireLogin = (req, res, next) => {
 };
 
 // 5. Routes
-
 // Public Routes (Handles landing, login, register)
 // GET /: Landing page / dashboard
 app.get('/', (req, res) => {
@@ -89,91 +101,59 @@ app.get('/', (req, res) => {
     return res.render('landing', { layout: 'public' });
 });
 
-
 // GET /login: Show login form
 app.get('/login', (req, res) => {
-    res.render('login', { layout: 'public' });
-});
-
-// POST /login: Handle login attempt (Levi)
-app.post('/login', async (req, res) => {
-    // **Authentication logic goes here**
-    let sName = req.body.username;
-    let sPassword = req.body.password;
-
-    knex.select(
-        'user_id',
-        'username',
-        'password',
-        'email',
-        'first_name',
-        'last_name',
-        'birthday',
-        'fav_resort',
-        'date_created'
-      )
-    .from('users')
-    .where("username", sName)
-    .andWhere("password", sPassword)
-    .then(users => {
-      // Check if a user was found with matching username AND password
-      if (users.length > 0) {
-        req.session.isLoggedIn = true;
-        req.session.user = {
-            user_id: users[0].user_id,
-            username: users[0].username,
-            email: users[0].email,
-            first_name: users[0].first_name,
-            last_name: users[0].last_name,
-            birthday: users[0].birthday,
-            fav_resort: users[0].fav_resort,
-            date_created: users[0].date_created
-          };
-
-        res.redirect("/");
-      } else {
-        // No matching user found
-        res.render("login", { error: "Invalid login" });
-      }
-    })
-    .catch(err => {
-      console.error("Login error:", err);
-      res.render("login", { error: "Invalid login" });
+    // If already logged in, go home
+    if (req.session.isLoggedIn) {
+      return res.redirect('/');
+    }
+  
+    res.render('login', { 
+      layout: 'public',
+      error: null
     });
-    // 1. Query DB for user by email
-    // 2. Compare password hash
-    // 3. If successful: req.session.user = { user_id: 1, username: 'testuser', role: 'User' };
-    // // Fav_resort will be id and needs the name queried out.
-    // res.redirect('/dashboard');
-    // Placeholder failure:
-    // res.render('login', { error: 'Invalid email or password' });
-});
-
-// GET /register: Show registration form
-app.get('/register', async (req, res) => {
+  });
+  
+  // POST /login: Handle login attempt (Levi)
+  app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+  
     try {
-      // Pull all resorts from DB
-      const resorts = await knex('resorts').select('resort_id', 'resort_name');
+      // Get full user row so session has everything (birthday, fav_resort, etc.)
+      const user = await knex('users')
+        .where({ username, password })
+        .first();
   
-      res.render('register', {
-        layout: 'public',
-        resorts: resorts   // send to EJS
-      });
+      if (!user) {
+        return res.render('login', { 
+          layout: 'public', 
+          error: 'Invalid login' 
+        });
+      }
   
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+  
+      return res.redirect('/');
     } catch (err) {
-      console.error("Error loading resorts:", err);
-  
-      // Show register page but with error message
-      res.render('register', {
-        layout: 'public',
-        resorts: [],
-        error: "Unable to load resort list."
+      console.error('Login error:', err);
+      return res.render('login', { 
+        layout: 'public', 
+        error: 'Something went wrong. Please try again.' 
       });
     }
   });
   
-// POST /register: Handle registration attempt (Levi)
-app.post('/register', async (req, res) => {
+// GET /register: Show registration form
+app.get('/register', (req, res) => {
+    res.render('register', { 
+      layout: 'public',
+      error: null
+    });
+  });
+  
+  // POST /register: Handle registration attempt (Levi)
+  app.post('/register', async (req, res) => {
     const { 
       username, 
       email, 
@@ -184,12 +164,9 @@ app.post('/register', async (req, res) => {
       fav_resort 
     } = req.body;
   
-    let resorts = []; // will hold resort list for any renders
-  
     try {
-      // Always load resorts so we can render the dropdown on any error
-      const resorts = await knex('resorts').select('resort_id', 'resort_name');
-
+      const favResortId = parseInt(fav_resort, 10);
+  
       // 1. Validate required fields
       if (
         !username || 
@@ -198,12 +175,12 @@ app.post('/register', async (req, res) => {
         !first_name || 
         !last_name || 
         !birthday || 
-        !fav_resort
+        Number.isNaN(favResortId)
       ) {
         return res.render('register', { 
           layout: 'public', 
-          error: 'All fields are required.',
-          resorts
+          error: 'All fields are required.'
+          // resorts come from res.locals.resorts automatically
         });
       }
   
@@ -216,8 +193,7 @@ app.post('/register', async (req, res) => {
       if (existingUser) {
         return res.render('register', { 
           layout: 'public', 
-          error: 'That username or email is already taken.',
-          resorts
+          error: 'That username or email is already taken.'
         });
       }
   
@@ -227,9 +203,9 @@ app.post('/register', async (req, res) => {
         last_name,
         username,
         email,
-        password,      // plaintext is fine for class
+        password,          // plaintext is fine for class
         birthday,
-        fav_resort: parseInt(fav_resort, 10),
+        fav_resort: favResortId,
         date_created: knex.fn.now()
       });
   
@@ -239,25 +215,14 @@ app.post('/register', async (req, res) => {
     } catch (err) {
       console.error('Registration error:', err);
   
-      // If resorts failed earlier, try again (or just pass empty array)
-      if (!resorts || resorts.length === 0) {
-        try {
-          resorts = await knex('resorts').select('resort_name');
-        } catch (e) {
-          console.error('Secondary resorts load failed:', e);
-        }
-      }
-  
       return res.render('register', {
         layout: 'public',
-        error: 'Something went wrong. Please try again.',
-        resorts
+        error: 'Something went wrong. Please try again.'
       });
     }
   });
   
-
-
+  
 // GET /logout
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
@@ -269,8 +234,115 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
 // Private/Authenticated Routes (Require requireLogin middleware)
+// GET /profile: View and edit user profile
+app.get('/profile', requireLogin, (req, res) => {
+    // Example placeholder – replace later with real query if you want
+    const mockUserReports = [
+      { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
+    ];
+  
+    res.render('profile', {
+      pageTitle: 'Profile',
+      reports: mockUserReports,
+      layout: 'public'
+      // user and resorts come from res.locals.user / res.locals.resorts
+    });
+  });
+  app.post('/profile', requireLogin, async (req, res) => {
+    try {
+      const userId = req.session.user.user_id;
+  
+      const { 
+        username, 
+        email, 
+        password,
+        first_name, 
+        last_name, 
+        birthday, 
+        fav_resort 
+      } = req.body;
+  
+      const favResortId = parseInt(fav_resort, 10);
+  
+      const mockUserReports = [
+        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
+      ];
+  
+      // Basic validation
+      if (
+        !username || 
+        !email || 
+        !password || 
+        !first_name || 
+        !last_name || 
+        !birthday || 
+        Number.isNaN(favResortId)
+      ) {
+        return res.render('profile', {
+          pageTitle: 'Profile',
+          layout: 'public',
+          reports: mockUserReports,
+          error: 'All fields are required.'
+        });
+      }
+  
+      // 🔎 Uniqueness check (ignore current user)
+      const existingUser = await knex('users')
+        .where(function () {
+          this.where('username', username).orWhere('email', email);
+        })
+        .andWhere('user_id', '!=', userId)
+        .first();
+  
+      if (existingUser) {
+        return res.render('profile', {
+          pageTitle: 'Profile',
+          layout: 'public',
+          reports: mockUserReports,
+          error: 'That username or email is already in use by another account.'
+        });
+      }
+  
+      // ✅ Update
+      await knex('users')
+        .where({ user_id: userId })
+        .update({
+          username,
+          email,
+          password,
+          first_name,
+          last_name,
+          birthday,
+          fav_resort: favResortId
+        });
+  
+      const updatedUser = await knex('users')
+        .where({ user_id: userId })
+        .first();
+  
+      req.session.user = updatedUser;
+  
+      return res.redirect('/profile');
+  
+    } catch (err) {
+      console.error("Profile update error:", err);
+  
+      const mockUserReports = [
+        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
+      ];
+  
+      return res.render("profile", {
+        pageTitle: 'Profile',
+        layout: 'public',
+        reports: mockUserReports,
+        error: "Error updating profile."
+      });
+    }
+  });
+  
+  
+  
 
 // GET /dashboard: Private home page
 app.get('/dashboard', requireLogin, (req, res) => {
@@ -335,24 +407,7 @@ app.post('/reports/<%= user_id %>', requireLogin, async (req, res) => {
     // **DB insert logic goes here**
     res.redirect('/reports');
 });
-
-// POST /reports: Update profile
-app.post('/profile', requireLogin, async (req, res) => {
-    // **DB insert logic goes here**
-    res.redirect('/profile');
-});
-
-// GET /profile: Display user profile (Lincoln/Rylee)
-app.get('/profile', requireLogin, async (req, res) => {
-    // **DB queries for user's reports and slopes go here**
-    const mockUserReports = [{ report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }];
-
-    res.render('profile', { 
-        pageTitle: 'Profile', 
-        reports: mockUserReports,
-        resorts: [ { resort_name : "Snowbird"}, {resort_name : "Brighton"}, {resort_name : "Sundance"}, {resort_name : "Alta"}]
-    });
-});
+  
 
 // Error Handling (404)
 app.use((req, res, next) => {
