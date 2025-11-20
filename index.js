@@ -47,11 +47,25 @@ app.use(expressLayouts);
 app.set('layout', 'public'); // Sets 'public.ejs' as the default layout
 
 // Middleware to expose user to all EJS views
+// Middleware to expose user to all EJS views + gate routes
 app.use((req, res, next) => {
-    // This is a placeholder for actual session/auth data
+    // Make user available in all views
     res.locals.user = req.session.user || null;
-    next();
+
+    // Skip auth for public routes
+    if (req.path === '/'|| req.path === '/login' || req.path === '/register' || req.path === '/logout') {
+        return next();
+    }
+
+    // If logged in, continue
+    if (req.session.isLoggedIn) {
+        return next();
+    }
+
+    // Not logged in → show login (ONE response, then stop)
+    return res.render("login", { layout: 'public', error_message: "Please log in to access this page" });
 });
+
 
 // Simple Auth Check Middleware
 const requireLogin = (req, res, next) => {
@@ -65,15 +79,16 @@ const requireLogin = (req, res, next) => {
 // 5. Routes
 
 // Public Routes (Handles landing, login, register)
-// GET /: Landing page
+// GET /: Landing page / dashboard
 app.get('/', (req, res) => {
-    // If user is logged in, redirect to dashboard
     if (req.session.user) {
-        return res.redirect('/dashboard');
+        // Logged in → dashboard
+        return res.render('dashboard', { layout: 'public' });
     }
-    // Renders the public landing page
-    res.render('landing', { layout: 'public' });
+    // Not logged in → landing page
+    return res.render('landing', { layout: 'public' });
 });
+
 
 // GET /login: Show login form
 app.get('/login', (req, res) => {
@@ -83,24 +98,53 @@ app.get('/login', (req, res) => {
 // POST /login: Handle login attempt (Levi)
 app.post('/login', async (req, res) => {
     // **Authentication logic goes here**
+    let sName = req.body.username;
+    let sPassword = req.body.password;
+
+    knex.select(
+        'user_id',
+        'username',
+        'password',
+        'email',
+        'first_name',
+        'last_name',
+        'birthday',
+        'fav_resort',
+        'date_created'
+      )
+    .from('users')
+    .where("username", sName)
+    .andWhere("password", sPassword)
+    .then(users => {
+      // Check if a user was found with matching username AND password
+      if (users.length > 0) {
+        req.session.isLoggedIn = true;
+        req.session.user = {
+            user_id: users[0].user_id,
+            username: users[0].username,
+            email: users[0].email,
+            first_name: users[0].first_name,
+            last_name: users[0].last_name,
+            birthday: users[0].birthday,
+            fav_resort: users[0].fav_resort,
+            date_created: users[0].date_created
+          };
+
+        res.redirect("/");
+      } else {
+        // No matching user found
+        res.render("login", { error: "Invalid login" });
+      }
+    })
+    .catch(err => {
+      console.error("Login error:", err);
+      res.render("login", { error: "Invalid login" });
+    });
     // 1. Query DB for user by email
     // 2. Compare password hash
     // 3. If successful: req.session.user = { user_id: 1, username: 'testuser', role: 'User' };
-    
-    // Placeholder success:
-    req.session.user = {
-        user_id: 1,
-        username: 'Lincly',
-        email: 'lincly@gmail.com',
-        first_name: 'Lincoln',
-        last_name: 'Lyons',
-        birthday: '1987-08-09',
-        fav_resort: 'Snowbird',
-        date_created: '2024-09-08'
-    };
-    // Fav_resort will be id and needs the name queried out.
-    res.redirect('/dashboard');
-
+    // // Fav_resort will be id and needs the name queried out.
+    // res.redirect('/dashboard');
     // Placeholder failure:
     // res.render('login', { error: 'Invalid email or password' });
 });
@@ -112,12 +156,51 @@ app.get('/register', (req, res) => {
 
 // POST /register: Handle registration attempt (Levi)
 app.post('/register', async (req, res) => {
-    // **Registration logic goes here**
-    // 1. Hash password
-    // 2. Insert new user into DB
-    // 3. If successful: Redirect to login
-    res.redirect('/login');
-});
+    const { username, email, password, role, first_name, last_name } = req.body;
+  
+    try {
+      // 1. Validate required fields
+      if (!username || !email || !password || !first_name || !last_name) {
+        return res.render('register', { 
+          layout: 'public', 
+          error: 'All fields are required.' 
+        });
+      }
+  
+      // 2. Check if username or email already exists
+      const existingUser = await knex('users')
+        .where('username', username)
+        .orWhere('email', email)
+        .first();
+  
+      if (existingUser) {
+        return res.render('register', { 
+          layout: 'public', 
+          error: 'That username or email is already taken.' 
+        });
+      }
+  
+      // 3. Insert the user
+      await knex('users').insert({
+        username: username,
+        email: email,
+        password: password,   // (for class — plaintext is fine)
+        first_name: first_name,
+        last_name: last_name,
+        date_created: knex.fn.now()
+      });
+  
+      // 4. Redirect to login
+      return res.redirect('/login');
+  
+    } catch (err) {
+      console.error('Registration error:', err);
+      return res.render('register', {
+        layout: 'public',
+        error: 'Something went wrong. Please try again.'
+      });
+    }
+  });
 
 // GET /logout
 app.get('/logout', (req, res) => {
