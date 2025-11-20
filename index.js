@@ -93,14 +93,30 @@ const requireLogin = (req, res, next) => {
 // 5. Routes
 // Public Routes (Handles landing, login, register)
 // GET /: Landing page / dashboard
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (req.session.user) {
-      // Logged in → dashboard
-      return res.render('dashboard', { layout: 'public' });
+    const reports = await knex('reports')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .orderBy('date_reported')
+      .limit(3)
+      .select(
+        'reports.*',
+        'users.user_id as user_user_id',
+        'users.username',
+        'users.email',
+        'runs.run_name'
+      );
+
+    return res.render('dashboard', {
+      layout: 'public',
+      reports: reports
+    });
   }
-  // Not logged in → landing page
+
   return res.render('landing', { layout: 'public' });
 });
+
 
 // GET /login: Show login form
 app.get('/login', (req, res) => {
@@ -524,6 +540,7 @@ app.get('/reports', requireLogin, async (req, res) => {
     const reports = await knex('reports')
       .join('users', 'reports.user_id', 'users.user_id')
       .join('runs', 'reports.run_id', 'runs.run_id')
+      .orderBy('date_reported')
       .select(
         'reports.*',
         'users.user_id as user_user_id',
