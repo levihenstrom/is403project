@@ -1046,34 +1046,68 @@ h1 {
     padding-left: 26px !important;
 }
 
-/* Beginner — ⛰️ */
+/* Beginner — Circle */
 .badge.bg-success::before {
-    content: " ⛰️ ";
+    content: "";
     position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.85rem;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
 }
 
-/* Intermediate — 🎿 */
+/* Intermediate — Square */
 .badge.bg-primary::before {
-    content: " 🎿 ";
+    content: "";
     position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.85rem;
+    width: 12px;
+    height: 12px;
+    background-color: white;
 }
 
-/* Advanced — ⚠️ */
+/* Advanced — Diamond */
 .badge.bg-danger::before {
-    content: " ⚠️ ";
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: white;
+}
+
+/* Expert — Two Diamonds */
+.badge.bg-dark::before {
+    content: "";
     position: absolute;
     left: 6px;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.9rem;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: white;
+}
+
+.badge.bg-dark::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: white;
+}
+
+.badge.bg-dark {
+    padding-left: 35px; /* Extra space for two diamonds */
 }
 
 
@@ -1103,7 +1137,7 @@ h1 {
 /* ADVANCED glow */
 .card.slope-expert:hover,
 .card.slope-advanced:hover {
-    box-shadow: 0 0 22px 10px rgba(214,69,69,0.45) !important;
+    box-shadow: 0 0 22px 10px rgba(20, 16, 16, 0.45) !important;
 }
 
 /* ============================
