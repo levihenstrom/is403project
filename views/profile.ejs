@@ -91,7 +91,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control" id="email" name="email" value="<%= locals.user.email %>" required>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= locals.user.email %>" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -112,7 +112,7 @@
                     <div class="mb-3">
                         <label for="fav_resort" class="form-label">Favortie Resort</label>
                         <select class="form-select" id="fav_resort" name="fav_resort" required>
-                            <option value="">--Select and option--</option>
+                            <option value="">-- Select and option --</option>
                             <% resorts.forEach(resort => { %>
                                 <option value="<%= resort.resort_name %>"> <%= resort.resort_name %></option>
                             <% }); %>

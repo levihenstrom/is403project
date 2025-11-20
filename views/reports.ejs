@@ -79,13 +79,21 @@
             <div class="modal-body">
                 <form action="/reports/<%= locals.user.user_id %>" method="POST">
                     <div class="mb-3">
-                        <label for="slope_id" class="form-label">Select Slope/Run</label>
-                        <select class="form-select" id="slope_id" name="slope_id" required>
-                            <option value="">--Select and option--</option>
-                            <% runs.forEach(run => { %>
-                                <option value="<%= run.run_name %>"> <%= run.run_name %></option>
-                            <% }); %>
-                            </select>
+                        <label for="resortSelect" class="form-label">Select Resort</label>
+                        <select class="form-select" id="resortSelect">
+                            <option value="">Choose a resort</option>
+                            <% resorts.forEach(r => { %>
+                                <option value="<%= r.id %>"><%= r.name %></option>
+                            <% }) %>
+                        </select>
+                        <label for="areaSelect_id" class="form-label">Select Area</label>
+                        <select class="form-select" id="areaSelect">
+                            <option value="">Choose a resort first</option>
+                        </select>
+                        <label for="runSelect" class="form-label">Select Run</label>
+                        <select class="form-select" id="runSelect">
+                            <option value="">Choose an area first</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Conditions/Hazards</label>
@@ -143,3 +151,4 @@
     </div>
 </div>
 </div>
+
