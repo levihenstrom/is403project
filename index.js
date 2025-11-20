@@ -150,24 +150,60 @@ app.post('/login', async (req, res) => {
 });
 
 // GET /register: Show registration form
-app.get('/register', (req, res) => {
-    res.render('register', {
+app.get('/register', async (req, res) => {
+    try {
+      // Pull all resorts from DB
+      const resorts = await knex('resorts').select('resort_id', 'resort_name');
+  
+      res.render('register', {
         layout: 'public',
-        resorts: [ { resort_name : "Snowbird"}, {resort_name : "Brighton"}, {resort_name : "Sundance"}, {resort_name : "Alta"}]
-   
-    });
-});
-
+        resorts: resorts   // send to EJS
+      });
+  
+    } catch (err) {
+      console.error("Error loading resorts:", err);
+  
+      // Show register page but with error message
+      res.render('register', {
+        layout: 'public',
+        resorts: [],
+        error: "Unable to load resort list."
+      });
+    }
+  });
+  
 // POST /register: Handle registration attempt (Levi)
 app.post('/register', async (req, res) => {
-    const { username, email, password, role, first_name, last_name } = req.body;
+    const { 
+      username, 
+      email, 
+      password, 
+      first_name, 
+      last_name, 
+      birthday, 
+      fav_resort 
+    } = req.body;
+  
+    let resorts = []; // will hold resort list for any renders
   
     try {
+      // Always load resorts so we can render the dropdown on any error
+      const resorts = await knex('resorts').select('resort_id', 'resort_name');
+
       // 1. Validate required fields
-      if (!username || !email || !password || !first_name || !last_name) {
+      if (
+        !username || 
+        !email || 
+        !password || 
+        !first_name || 
+        !last_name || 
+        !birthday || 
+        !fav_resort
+      ) {
         return res.render('register', { 
           layout: 'public', 
-          error: 'All fields are required.' 
+          error: 'All fields are required.',
+          resorts
         });
       }
   
@@ -180,17 +216,20 @@ app.post('/register', async (req, res) => {
       if (existingUser) {
         return res.render('register', { 
           layout: 'public', 
-          error: 'That username or email is already taken.' 
+          error: 'That username or email is already taken.',
+          resorts
         });
       }
   
       // 3. Insert the user
       await knex('users').insert({
-        username: username,
-        email: email,
-        password: password,   // (for class — plaintext is fine)
-        first_name: first_name,
-        last_name: last_name,
+        first_name,
+        last_name,
+        username,
+        email,
+        password,      // plaintext is fine for class
+        birthday,
+        fav_resort: parseInt(fav_resort, 10),
         date_created: knex.fn.now()
       });
   
@@ -199,12 +238,25 @@ app.post('/register', async (req, res) => {
   
     } catch (err) {
       console.error('Registration error:', err);
+  
+      // If resorts failed earlier, try again (or just pass empty array)
+      if (!resorts || resorts.length === 0) {
+        try {
+          resorts = await knex('resorts').select('resort_name');
+        } catch (e) {
+          console.error('Secondary resorts load failed:', e);
+        }
+      }
+  
       return res.render('register', {
         layout: 'public',
-        error: 'Something went wrong. Please try again.'
+        error: 'Something went wrong. Please try again.',
+        resorts
       });
     }
   });
+  
+
 
 // GET /logout
 app.get('/logout', (req, res) => {
@@ -310,4 +362,4 @@ app.use((req, res, next) => {
 // 6. Start Server
 app.listen(port, () => {
     console.log(`SlopeSense server listening at port:${port}`);
-});
+}); 

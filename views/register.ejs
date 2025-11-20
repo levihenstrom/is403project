@@ -30,14 +30,6 @@
                         <input type="text" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="first_name" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="birthday" class="form-label">Birthday</label>
                         <input type="date" class="form-control" id="birthday" name="birthday" required>
                     </div>
@@ -46,7 +38,8 @@
                         <select class="form-select" id="fav_resort" name="fav_resort" required>
                             <option value="">-- Select and option --</option>
                             <% resorts.forEach(resort => { %>
-                                <option value="<%= resort.resort_name %>"> <%= resort.resort_name %></option>
+                                <option value="<%= resort.resort_id %>">
+                                    <%= resort.resort_name %></option>
                             <% }); %>
                             </select>
                     </div>
