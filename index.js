@@ -23,6 +23,7 @@ const port = process.env.PORT || 3414;
 
 // in index.js
 const knexConfig = require("./knexfile");
+const { render } = require('ejs');
 const environment = process.env.NODE_ENV || "development";
 const knex = require("knex")(knexConfig[environment]);
 
@@ -63,86 +64,86 @@ app.use(async (req, res, next) => {
     next();
 });
 app.use((req, res, next) => {
-    // Make user available in all views
-    res.locals.user = req.session.user || null;
+  // Make user available in all views
+  res.locals.user = req.session.user || null;
 
-    // Skip auth for public routes
-    if (req.path === '/'|| req.path === '/login' || req.path === '/register' || req.path === '/logout') {
-        return next();
-    }
+  // Skip auth for public routes
+  if (req.path === '/'|| req.path === '/login' || req.path === '/register' || req.path === '/logout') {
+      return next();
+  }
 
-    // If logged in, continue
-    if (req.session.isLoggedIn) {
-        return next();
-    }
+  // If logged in, continue
+  if (req.session.isLoggedIn) {
+      return next();
+  }
 
-    // Not logged in → show login (ONE response, then stop)
-    return res.render("login", { layout: 'public', error_message: "Please log in to access this page" });
+  // Not logged in → show login (ONE response, then stop)
+  return res.render("login", { layout: 'public', error_message: "Please log in to access this page" });
 });
 
 // Simple Auth Check Middleware
 const requireLogin = (req, res, next) => {
-    if (!req.session.user) {
-        // Redirect unauthenticated users
-        return res.redirect('/login');
-    }
-    next();
+  if (!req.session.user) {
+      // Redirect unauthenticated users
+      return res.redirect('/login');
+  }
+  next();
 };
 
 // 5. Routes
 // Public Routes (Handles landing, login, register)
 // GET /: Landing page / dashboard
 app.get('/', (req, res) => {
-    if (req.session.user) {
-        // Logged in → dashboard
-        return res.render('dashboard', { layout: 'public' });
-    }
-    // Not logged in → landing page
-    return res.render('landing', { layout: 'public' });
+  if (req.session.user) {
+      // Logged in → dashboard
+      return res.render('dashboard', { layout: 'public' });
+  }
+  // Not logged in → landing page
+  return res.render('landing', { layout: 'public' });
 });
 
 // GET /login: Show login form
 app.get('/login', (req, res) => {
-    // If already logged in, go home
-    if (req.session.isLoggedIn) {
-      return res.redirect('/');
-    }
-  
-    res.render('login', { 
-      layout: 'public',
-      error: null
-    });
+  // If already logged in, go home
+  if (req.session.isLoggedIn) {
+    return res.redirect('/');
+  }
+
+  res.render('login', { 
+    layout: 'public',
+    error: null
   });
+});
   
-  // POST /login: Handle login attempt (Levi)
-  app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-  
-    try {
-      // Get full user row so session has everything (birthday, fav_resort, etc.)
-      const user = await knex('users')
-        .where({ username, password })
-        .first();
-  
-      if (!user) {
-        return res.render('login', { 
-          layout: 'public', 
-          error: 'Invalid login' 
-        });
-      }
-  
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-  
-      return res.redirect('/');
-    } catch (err) {
-      console.error('Login error:', err);
+// POST /login: Handle login attempt (Levi)
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Get full user row so session has everything (birthday, fav_resort, etc.)
+    const user = await knex('users')
+      .where({ username, password })
+      .first();
+
+    if (!user) {
       return res.render('login', { 
         layout: 'public', 
-        error: 'Something went wrong. Please try again.' 
+        error: 'Invalid login' 
       });
     }
-  });
+
+    req.session.isLoggedIn = true;
+    req.session.user = user;
+
+    return res.redirect('/');
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.render('login', { 
+      layout: 'public', 
+      error: 'Something went wrong. Please try again.' 
+    });
+  }
+});
   
 // GET /register: Show registration form
 app.get('/register', (req, res) => {
@@ -218,9 +219,9 @@ app.get('/register', (req, res) => {
       return res.render('register', {
         layout: 'public',
         error: 'Something went wrong. Please try again.'
-      });
-    }
-  });
+    });
+  }
+});
   
   
 // GET /logout
@@ -234,115 +235,145 @@ app.get('/logout', (req, res) => {
     });
 });
 
-// Private/Authenticated Routes (Require requireLogin middleware)
-// GET /profile: View and edit user profile
-app.get('/profile', requireLogin, (req, res) => {
-    // Example placeholder – replace later with real query if you want
+
+app.get('/profile', requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.user.user_id;
+
+    const reports = await knex('reports')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .where('reports.user_id', userId)
+      .select(
+        'reports.*',
+        'users.user_id as user_user_id',
+        'users.username',
+        'users.email',
+        'runs.run_name'
+      );
+
+    res.render('profile', {
+      pageTitle: 'Profile',
+      layout: 'public',
+      reports: reports
+    });
+  } catch (err) {
+    console.error("DB ERROR:", err);
+    if (!res.headersSent) res.status(500).send("Database error: " + err.message);
+  }
+});
+
+
+
+
+app.post('/profile', requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.user.user_id;
+
+    const { 
+      username, 
+      email, 
+      password,
+      first_name, 
+      last_name, 
+      birthday, 
+      fav_resort 
+    } = req.body;
+
+    const favResortId = parseInt(fav_resort, 10);
+
     const mockUserReports = [
       { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
     ];
-  
-    res.render('profile', {
-      pageTitle: 'Profile',
-      reports: mockUserReports,
-      layout: 'public'
-      // user and resorts come from res.locals.user / res.locals.resorts
-    });
-  });
-  app.post('/profile', requireLogin, async (req, res) => {
-    try {
-      const userId = req.session.user.user_id;
-  
-      const { 
-        username, 
-        email, 
-        password,
-        first_name, 
-        last_name, 
-        birthday, 
-        fav_resort 
-      } = req.body;
-  
-      const favResortId = parseInt(fav_resort, 10);
-  
-      const mockUserReports = [
-        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
-      ];
-  
-      // Basic validation
-      if (
-        !username || 
-        !email || 
-        !password || 
-        !first_name || 
-        !last_name || 
-        !birthday || 
-        Number.isNaN(favResortId)
-      ) {
-        return res.render('profile', {
-          pageTitle: 'Profile',
-          layout: 'public',
-          reports: mockUserReports,
-          error: 'All fields are required.'
-        });
-      }
-  
-      // 🔎 Uniqueness check (ignore current user)
-      const existingUser = await knex('users')
-        .where(function () {
-          this.where('username', username).orWhere('email', email);
-        })
-        .andWhere('user_id', '!=', userId)
-        .first();
-  
-      if (existingUser) {
-        return res.render('profile', {
-          pageTitle: 'Profile',
-          layout: 'public',
-          reports: mockUserReports,
-          error: 'That username or email is already in use by another account.'
-        });
-      }
-  
-      // ✅ Update
-      await knex('users')
-        .where({ user_id: userId })
-        .update({
-          username,
-          email,
-          password,
-          first_name,
-          last_name,
-          birthday,
-          fav_resort: favResortId
-        });
-  
-      const updatedUser = await knex('users')
-        .where({ user_id: userId })
-        .first();
-  
-      req.session.user = updatedUser;
-  
-      return res.redirect('/profile');
-  
-    } catch (err) {
-      console.error("Profile update error:", err);
-  
-      const mockUserReports = [
-        { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
-      ];
-  
-      return res.render("profile", {
+
+    // Basic validation
+    if (
+      !username || 
+      !email || 
+      !password || 
+      !first_name || 
+      !last_name || 
+      !birthday || 
+      Number.isNaN(favResortId)
+    ) {
+      return res.render('profile', {
         pageTitle: 'Profile',
         layout: 'public',
         reports: mockUserReports,
-        error: "Error updating profile."
+        error: 'All fields are required.'
       });
     }
-  });
+
+    // 🔎 Uniqueness check (ignore current user)
+    const existingUser = await knex('users')
+      .where(function () {
+        this.where('username', username).orWhere('email', email);
+      })
+      .andWhere('user_id', '!=', userId)
+      .first();
+
+    if (existingUser) {
+      return res.render('profile', {
+        pageTitle: 'Profile',
+        layout: 'public',
+        reports: mockUserReports,
+        error: 'That username or email is already in use by another account.'
+      });
+    }
+
+    // ✅ Update
+    await knex('users')
+      .where({ user_id: userId })
+      .update({
+        username,
+        email,
+        password,
+        first_name,
+        last_name,
+        birthday,
+        fav_resort: favResortId
+      });
+
+    const updatedUser = await knex('users')
+      .where({ user_id: userId })
+      .first();
+
+    req.session.user = updatedUser;
+
+    return res.redirect('/profile');
+
+  } catch (err) {
+    console.error("Profile update error:", err);
+
+    const mockUserReports = [
+      { report_id: 1, slope_id: 1, slope_name: 'The Grotto', created_time: new Date() }
+    ];
+
+    return res.render("profile", {
+      pageTitle: 'Profile',
+      layout: 'public',
+      reports: mockUserReports,
+      error: "Error updating profile."
+    });
+  }
+});
   
-  
-  
+
+app.post("/deleteReport/:id/delete", (req, res) => {
+  const reportId = req.params.id;
+
+  knex("reports")
+    .where("report_id", reportId)
+    .del()
+    .then(() => {
+      res.redirect("/profile"); // redirect to profile after deletion
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ err });
+    });
+});
+ 
 
 // GET /dashboard: Private home page
 app.get('/dashboard', requireLogin, (req, res) => {
