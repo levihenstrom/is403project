@@ -107,7 +107,11 @@ app.post('/login', async (req, res) => {
 
 // GET /register: Show registration form
 app.get('/register', (req, res) => {
-    res.render('register', { layout: 'public' });
+    res.render('register', {
+        layout: 'public',
+        resorts: [ { resort_name : "Snowbird"}, {resort_name : "Brighton"}, {resort_name : "Sundance"}, {resort_name : "Alta"}]
+   
+    });
 });
 
 // POST /register: Handle registration attempt (Levi)
@@ -168,6 +172,8 @@ app.get('/reports', requireLogin, async (req, res) => {
         slope_name: 'The Grotto',
         user_id: 1,
         username: 'testPerson',
+        area_name: 'area',
+        resort_name: 'resort',
         obstacle: true,
         description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.',
         groomed: false,
@@ -183,7 +189,9 @@ app.get('/reports', requireLogin, async (req, res) => {
     res.render('reports', {
         pageTitle: 'Reports',
         reports: mockReports,
-        runs: [{run_name: "Chickadee"}, {run_name: "Baby Thunder"}]
+        resorts: [{resort_name: "Snowbird"}, {resort_name: "Sundance"}],
+        areas: [{area_name: "Area1", resort_name: "Snowbird"},{area_name: "Area2", resort_name: "Snowbird"},{area_name: "Areaz", resort_name: "Sundance"}],
+        runs: [{run_name: "Chickadee", area_name: "Area1", resort_name: "Snowbird"}, {run_name: "Baby Thunder", area_name: "Areaz", resort_name: "Sundance"}]
     });
 });
 
