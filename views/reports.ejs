@@ -401,10 +401,6 @@
 
 <!-- modal script -->
 <script>
-    // Turn EJS data into JS arrays
-    const allAreas = JSON.parse(`<%- JSON.stringify(areas || []) %>`);
-    const allRuns  = JSON.parse(`<%- JSON.stringify(runs  || []) %>`);
-  
     document.addEventListener('DOMContentLoaded', () => {
       // 👉 Target MODAL selects, not the filter selects
       const resortSelect = document.getElementById('modalResortSelect');
@@ -416,46 +412,79 @@
         return;
       }
   
-      resortSelect.addEventListener('change', function () {
-        const resortId = this.value;
-  
+      async function loadAreasForResort(resortId) {
+        // Reset area and run selects
         areaSelect.innerHTML = '<option value="">Choose a resort first</option>';
-        runSelect.innerHTML  = '<option value="">Choose an area first</option>';
-  
+        runSelect.innerHTML = '<option value="">Choose an area first</option>';
+        
         if (!resortId) return;
   
-        const filteredAreas = allAreas.filter(a => a.resort_id == resortId);
+        try {
+          const res = await fetch(`/api/resorts/${resortId}/areas`);
+          if (!res.ok) {
+            areaSelect.innerHTML = '<option value="">Error loading areas</option>';
+            return;
+          }
+          const areas = await res.json();
   
-        if (!filteredAreas.length) {
-          areaSelect.innerHTML = '<option value="">No areas for this resort</option>';
-          return;
+          if (!areas.length) {
+            areaSelect.innerHTML = '<option value="">No areas for this resort</option>';
+            return;
+          }
+  
+          areaSelect.innerHTML = '<option value="">Choose an area</option>';
+          areas.forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a.area_id;
+            opt.textContent = a.area_name;
+            areaSelect.appendChild(opt);
+          });
+        } catch (err) {
+          console.error('Error loading areas for resort', resortId, err);
+          areaSelect.innerHTML = '<option value="">Error loading areas</option>';
         }
+      }
   
-        areaSelect.innerHTML =
-          '<option value="">Choose an area</option>' +
-          filteredAreas.map(a =>
-            `<option value="${a.area_id}">${a.area_name}</option>`
-          ).join('');
+      async function loadRunsForArea(areaId) {
+        // Reset run select
+        runSelect.innerHTML = '<option value="">Choose an area first</option>';
+        
+        if (!areaId) return;
+  
+        try {
+          const res = await fetch(`/api/areas/${areaId}/runs`);
+          if (!res.ok) {
+            runSelect.innerHTML = '<option value="">Error loading runs</option>';
+            return;
+          }
+          const runs = await res.json();
+  
+          if (!runs.length) {
+            runSelect.innerHTML = '<option value="">No runs for this area</option>';
+            return;
+          }
+  
+          runSelect.innerHTML = '<option value="">Choose a run</option>';
+          runs.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.run_id;
+            opt.textContent = r.run_name;
+            runSelect.appendChild(opt);
+          });
+        } catch (err) {
+          console.error('Error loading runs for area', areaId, err);
+          runSelect.innerHTML = '<option value="">Error loading runs</option>';
+        }
+      }
+  
+      resortSelect.addEventListener('change', function () {
+        const resortId = this.value || null;
+        loadAreasForResort(resortId);
       });
   
       areaSelect.addEventListener('change', function () {
-        const areaId = this.value;
-  
-        runSelect.innerHTML = '<option value="">Choose an area first</option>';
-        if (!areaId) return;
-  
-        const filteredRuns = allRuns.filter(r => r.area_id == areaId);
-  
-        if (!filteredRuns.length) {
-          runSelect.innerHTML = '<option value="">No runs for this area</option>';
-          return;
-        }
-  
-        runSelect.innerHTML =
-          '<option value="">Choose a run</option>' +
-          filteredRuns.map(r =>
-            `<option value="${r.run_id}">${r.run_name}</option>`
-          ).join('');
+        const areaId = this.value || null;
+        loadRunsForArea(areaId);
       });
     });
   </script>

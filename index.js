@@ -374,11 +374,9 @@ app.post("/deleteReport/:id/delete", (req, res) => {
  
 app.post('/reports/:user_id', requireLogin, async (req, res) => {
   try {
-    const userId = req.params.user_id; // or req.session.user_id if you prefer
+    const userId = req.params.user_id;
 
     const {
-      resort_id,
-      area_id,
       run_id,
       description,
       obstacle,
@@ -389,16 +387,18 @@ app.post('/reports/:user_id', requireLogin, async (req, res) => {
       granular,
       thin_cover,
       packed,
-      wet,
-      closed
+      wet
     } = req.body;
+
+    // Validate required fields
+    if (!run_id) {
+      return res.status(400).send('Run is required');
+    }
 
     await knex('reports').insert({
       user_id:      userId,
-      resort_id,
-      area_id,
       run_id,
-      description,
+      description: description || null,
 
       obstacle:    obstacle    === 'true',
       groomed:     groomed     === 'true',
@@ -409,12 +409,11 @@ app.post('/reports/:user_id', requireLogin, async (req, res) => {
       thin_cover:  thin_cover  === 'true',
       packed:      packed      === 'true',
       wet:         wet         === 'true',
-      closed:      closed      === 'true',
 
-      created_at: knex.fn.now()
+      date_reported: knex.fn.now()
     });
 
-    res.redirect('/slopes'); // or wherever your reports page is
+    res.redirect('/reports');
   } catch (err) {
     console.error('Error inserting report:', err);
     res.status(500).send('Error saving report');
@@ -515,37 +514,6 @@ app.post('/displaySlopes', requireLogin, async (req, res) => {
     }
 });
 
-// API: get areas for a given resort (used by the slopes page JS)
-app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
-    const resortId = req.params.id;
-
-    try {
-        const areas = await knex('areas')
-            .where('resort_id', resortId)
-            .orderBy('area_name');
-
-        res.json(areas);
-    } catch (err) {
-        console.error('Error fetching areas for resort', resortId, err);
-        res.status(500).json({ error: 'Error loading areas' });
-    }
-});
-
-// Get runs for a given area (used by reports page filters)
-app.get('/api/areas/:id/runs', requireLogin, async (req, res) => {
-  const areaId = req.params.id;
-
-  try {
-    const runs = await knex('runs')
-      .where('area_id', areaId)
-      .orderBy('run_name');
-
-    res.json(runs);
-  } catch (err) {
-    console.error('Error fetching runs for area', areaId, err);
-    res.status(500).json({ error: 'Error loading runs' });
-  }
-});
 
 
 app.get('/reports', requireLogin, async (req, res) => {
@@ -703,11 +671,43 @@ app.post('/reports', requireLogin, async (req, res) => {
     res.status(500).send('Error loading reports');
   }
 });
+
+// API: get areas for a given resort (used by the slopes page JS)
+app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
+    const resortId = req.params.id;
+
+    try {
+        const areas = await knex('areas')
+            .where('resort_id', resortId)
+            .orderBy('area_name');
+
+        res.json(areas);
+    } catch (err) {
+        console.error('Error fetching areas for resort', resortId, err);
+        res.status(500).json({ error: 'Error loading areas' });
+    }
+});
+
+// Get runs for a given area (used by reports page filters)
+app.get('/api/areas/:id/runs', requireLogin, async (req, res) => {
+  const areaId = req.params.id;
+
+  try {
+    const runs = await knex('runs')
+      .where('area_id', areaId)
+      .orderBy('run_name');
+
+    res.json(runs);
+  } catch (err) {
+    console.error('Error fetching runs for area', areaId, err);
+    res.status(500).json({ error: 'Error loading runs' });
+  }
+});
+
 // Error Handling (404)
 app.use((req, res, next) => {
     res.status(404).send("Sorry, can't find that!");
 });
-
 
 // 6. Start Server
 app.listen(port, () => {
