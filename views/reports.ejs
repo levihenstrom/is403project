@@ -9,9 +9,153 @@
     <% } %>
 </div>
 
+<!-- filter -->
+<form method="POST" action="/reports" class="mb-4">
+    <div class="row g-2 align-items-end">
+  
+      <!-- Resort filter -->
+      <div class="col-md-4">
+        <label for="resortSelect" class="form-label">Resort</label>
+        <select id="resortSelect" name="resort_id" class="form-select">
+          <option value="" <%= !locals.selectedResortId ? 'selected' : '' %>>All resorts</option>
+          <% if (locals.resorts && resorts.length) { %>
+            <% resorts.forEach(r => { %>
+              <option 
+                value="<%= r.resort_id %>" 
+                <%= locals.selectedResortId 
+                    && String(locals.selectedResortId) === String(r.resort_id)
+                    ? 'selected' 
+                    : '' %>>
+                <%= r.resort_name %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+  
+      <!-- Area filter -->
+      <div class="col-md-4">
+        <label for="areaSelect" class="form-label">Area</label>
+        <select id="areaSelect" name="area_id" class="form-select">
+          <option value="" <%= !locals.selectedAreaId ? 'selected' : '' %>>All areas</option>
+          <% if (locals.areas && areas.length) { %>
+            <% areas.forEach(a => { %>
+              <option 
+                value="<%= a.area_id %>" 
+                <%= locals.selectedAreaId 
+                    && String(locals.selectedAreaId) === String(a.area_id)
+                    ? 'selected' 
+                    : '' %>>
+                <%= a.area_name %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+  
+      <!-- Run filter -->
+      <div class="col-md-4">
+        <label for="runSelect" class="form-label">Run</label>
+        <select id="runSelect" name="run_id" class="form-select">
+          <option value="" <%= !locals.selectedRunId ? 'selected' : '' %>>All runs</option>
+          <% if (locals.runs && runs.length) { %>
+            <% runs.forEach(run => { %>
+              <option 
+                value="<%= run.run_id %>" 
+                <%= locals.selectedRunId 
+                    && String(locals.selectedRunId) === String(run.run_id)
+                    ? 'selected' 
+                    : '' %>>
+                <%= run.run_name %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+  
+    </div>
+  
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary">Filter Reports</button>
+    </div>
+  </form>
+
+  <!-- filter scripts -->
+  <script>
+    const resortSelect = document.getElementById('resortSelect');
+    const areaSelect = document.getElementById('areaSelect');
+    const runSelect = document.getElementById('runSelect');
+  
+    function resetAreaSelect() {
+      areaSelect.innerHTML = `
+        <option value="">All areas</option>
+      `;
+    }
+  
+    function resetRunSelect() {
+      runSelect.innerHTML = `
+        <option value="">All runs</option>
+      `;
+    }
+  
+    async function loadAreasForResort(resortId) {
+      resetAreaSelect();
+      resetRunSelect(); // clear runs too because resort changed
+  
+      if (!resortId) return; // if "All resorts", nothing else to load
+  
+      try {
+        const res = await fetch(`/api/resorts/${resortId}/areas`);
+        if (!res.ok) return;
+        const areas = await res.json();
+  
+        areas.forEach(a => {
+          const opt = document.createElement('option');
+          opt.value = a.area_id;
+          opt.textContent = a.area_name;
+          areaSelect.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Error loading areas for resort', resortId, err);
+      }
+    }
+  
+    async function loadRunsForArea(areaId) {
+      resetRunSelect();
+  
+      if (!areaId) return; // if "All areas", nothing more to load
+  
+      try {
+        const res = await fetch(`/api/areas/${areaId}/runs`);
+        if (!res.ok) return;
+        const runs = await res.json();
+  
+        runs.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.run_id;
+          opt.textContent = r.run_name;
+          runSelect.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Error loading runs for area', areaId, err);
+      }
+    }
+  
+    resortSelect.addEventListener('change', () => {
+      const resortId = resortSelect.value || null;
+      loadAreasForResort(resortId);
+    });
+  
+    areaSelect.addEventListener('change', () => {
+      const areaId = areaSelect.value || null;
+      loadRunsForArea(areaId);
+    });
+  </script>
+
 <% if (locals.reports && reports.length) { %>
     <div class="list-group">
     <h2>Latest Hazards & Conditions</h2>
+    
         <% reports.forEach(report => { %>
             <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
@@ -60,7 +204,7 @@
     </div>
 <% } %>
 
-<div class="modal fade" id="addReportModal" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="addReportModal" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -140,6 +284,178 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
+<!-- modal -->
+<div class="modal fade" id="addReportModal" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addReportModalLabel">Submit Condition Report</h5>
+          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <form action="/reports/<%= locals.user.user_id %>" method="POST">
+            <div class="mb-3">
+              <!-- RESORT -->
+              <label for="modalResortSelect" class="form-label">Select Resort</label>
+                <select
+                class="form-select"
+                id="modalResortSelect"
+                name="resort_id"
+                required
+                >
+                <option value="">Choose a resort</option>
+                <% resorts.forEach(r => { %>
+                  <option value="<%= r.resort_id %>"><%= r.resort_name %></option>
+                <% }) %>
+              </select>
+  
+              <!-- AREA -->
+              <label for="modalAreaSelect" class="form-label mt-2">Select Area</label>
+                <select
+                class="form-select"
+                id="modalAreaSelect"
+                name="area_id"
+                required
+                >
+                <option value="">Choose a resort first</option>
+              </select>
+  
+              <!-- RUN -->
+              <label for="modalRunSelect" class="form-label mt-2">Select Run</label>
+                <select
+                class="form-select"
+                id="modalRunSelect"
+                name="run_id"
+                required
+                >
+                <option value="">Choose an area first</option>
+              </select>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Conditions/Hazards</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="obstacle" name="obstacle" value="true">
+                  <label class="form-check-label" for="obstacle">Obstacle</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="groomed" name="groomed" value="true">
+                  <label class="form-check-label" for="groomed">Groomed</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="icy" name="icy" value="true">
+                  <label class="form-check-label" for="icy">Icy</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="powder" name="powder" value="true">
+                    <label class="form-check-label" for="powder">Powder</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="moguls" name="moguls" value="true">
+                    <label class="form-check-label" for="moguls">Moguls</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="granular" name="granular" value="true">
+                    <label class="form-check-label" for="granular">Granular</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="thin_cover" name="thin_cover" value="true">
+                    <label class="form-check-label" for="thin_cover">Thin Cover</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="packed" name="packed" value="true">
+                    <label class="form-check-label" for="packed">Packed</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="wet" name="wet" value="true">
+                    <label class="form-check-label" for="wet">Wet</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="closed" name="closed" value="true">
+                    <label class="form-check-label" for="closed">Closed</label>
+                </div>
+              </div>
+            </div>
+  
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                rows="3"
+              ></textarea>
+            </div>
+  
+            <button type="submit" class="btn btn-warning">Submit Report</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- modal script -->
+<script>
+    // Turn EJS data into JS arrays
+    const allAreas = JSON.parse(`<%- JSON.stringify(areas || []) %>`);
+    const allRuns  = JSON.parse(`<%- JSON.stringify(runs  || []) %>`);
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      // 👉 Target MODAL selects, not the filter selects
+      const resortSelect = document.getElementById('modalResortSelect');
+      const areaSelect   = document.getElementById('modalAreaSelect');
+      const runSelect    = document.getElementById('modalRunSelect');
+  
+      if (!resortSelect || !areaSelect || !runSelect) {
+        console.warn('Report modal selects not found on this page');
+        return;
+      }
+  
+      resortSelect.addEventListener('change', function () {
+        const resortId = this.value;
+  
+        areaSelect.innerHTML = '<option value="">Choose a resort first</option>';
+        runSelect.innerHTML  = '<option value="">Choose an area first</option>';
+  
+        if (!resortId) return;
+  
+        const filteredAreas = allAreas.filter(a => a.resort_id == resortId);
+  
+        if (!filteredAreas.length) {
+          areaSelect.innerHTML = '<option value="">No areas for this resort</option>';
+          return;
+        }
+  
+        areaSelect.innerHTML =
+          '<option value="">Choose an area</option>' +
+          filteredAreas.map(a =>
+            `<option value="${a.area_id}">${a.area_name}</option>`
+          ).join('');
+      });
+  
+      areaSelect.addEventListener('change', function () {
+        const areaId = this.value;
+  
+        runSelect.innerHTML = '<option value="">Choose an area first</option>';
+        if (!areaId) return;
+  
+        const filteredRuns = allRuns.filter(r => r.area_id == areaId);
+  
+        if (!filteredRuns.length) {
+          runSelect.innerHTML = '<option value="">No runs for this area</option>';
+          return;
+        }
+  
+        runSelect.innerHTML =
+          '<option value="">Choose a run</option>' +
+          filteredRuns.map(r =>
+            `<option value="${r.run_id}">${r.run_name}</option>`
+          ).join('');
+      });
+    });
+  </script>

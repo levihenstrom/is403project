@@ -59,7 +59,7 @@
 
         </div>
         <div class="col-md-auto">
-            <button type="submit" class="btn btn-primary">Show Runs</button>        </div>    </div>
+            <button type="submit" class="btn btn-primary">Show Runs</button>        </div>   
 </form>
 <script>
     const resortSelect = document.getElementById('resortSelect');
@@ -126,8 +126,10 @@
                         </p>
 
                         <!-- Use run_id, not slope_id -->
-                        <a href="/slopeDetails/<%= slope.run_id %>" class="btn btn-primary">Reports</a>
-                    </div>
+                        <form method="POST" action="/reports" class="d-inline">
+                            <input type="hidden" name="run_id" value="<%= slope.run_id %>">
+                            <button type="submit" class="btn btn-primary btn-sm">Reports</button>
+                          </form>                    </div>
                 </div>
             </div>
         <% }); %>
