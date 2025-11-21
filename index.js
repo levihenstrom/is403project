@@ -280,8 +280,6 @@ app.get('/profile', requireLogin, async (req, res) => {
 });
 
 
-
-
 app.post('/profile', requireLogin, async (req, res) => {
   try {
     const userId = req.session.user.user_id;
@@ -390,6 +388,53 @@ app.post("/deleteReport/:id/delete", (req, res) => {
     });
 });
  
+app.post('/reports/:user_id', requireLogin, async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+
+    const {
+      run_id,
+      description,
+      obstacle,
+      groomed,
+      icy,
+      powder,
+      moguls,
+      granular,
+      thin_cover,
+      packed,
+      wet
+    } = req.body;
+
+    // Validate required fields
+    if (!run_id) {
+      return res.status(400).send('Run is required');
+    }
+
+    await knex('reports').insert({
+      user_id:      userId,
+      run_id,
+      description: description || null,
+
+      obstacle:    obstacle    === 'true',
+      groomed:     groomed     === 'true',
+      icy:         icy         === 'true',
+      powder:      powder      === 'true',
+      moguls:      moguls      === 'true',
+      granular:    granular    === 'true',
+      thin_cover:  thin_cover  === 'true',
+      packed:      packed      === 'true',
+      wet:         wet         === 'true',
+
+      date_reported: knex.fn.now()
+    });
+
+    res.redirect('/reports');
+  } catch (err) {
+    console.error('Error inserting report:', err);
+    res.status(500).send('Error saving report');
+  }
+});
 
 // GET /dashboard: Private home page
 app.get('/dashboard', requireLogin, (req, res) => {
@@ -485,6 +530,164 @@ app.post('/displaySlopes', requireLogin, async (req, res) => {
     }
 });
 
+
+
+app.get('/reports', requireLogin, async (req, res) => {
+  try {
+    // For dropdowns
+    const resorts = await knex('resorts')
+      .select('resort_id', 'resort_name')
+      .orderBy('resort_name');
+
+    // Show ALL reports newest → oldest
+    const reports = await knex('reports')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .join('areas', 'runs.area_id', 'areas.area_id')
+      .join('resorts', 'areas.resort_id', 'resorts.resort_id')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .select(
+        'reports.report_id',
+        'reports.date_reported',
+        'reports.description',
+        'reports.obstacle',
+        'reports.groomed',
+        'reports.icy',
+        'reports.powder',
+        'reports.moguls',
+        'reports.thin_cover',
+        'runs.run_id',
+        'runs.run_name',
+        'areas.area_id',
+        'areas.area_name',
+        'resorts.resort_id',
+        'resorts.resort_name',
+        'users.user_id',
+        'users.username'
+      )
+      .orderBy('reports.date_reported', 'desc');
+
+    res.render('reports', {
+      pageTitle: 'Reports',
+      resorts,
+      areas: [],             // none yet; will be filled when filtering
+      runs: [],              // same
+      reports,
+      selectedResortId: null,
+      selectedAreaId: null,
+      selectedRunId: null
+    });
+  } catch (err) {
+    console.error('Error loading reports:', err);
+    res.status(500).send('Error loading reports');
+  }
+});
+// POST /reports – apply filters OR come from "Reports" button on slopes
+app.post('/reports', requireLogin, async (req, res) => {
+  let { resort_id, area_id, run_id } = req.body;
+
+  // Normalize empty strings as null
+  let selectedResortId = resort_id || null;
+  let selectedAreaId = area_id || null;
+  let selectedRunId = run_id || null;
+
+  try {
+    // If they came from a slope's "Reports" button with only run_id,
+    // derive the resort and area from that run.
+    if (selectedRunId && (!selectedResortId || !selectedAreaId)) {
+      const runRow = await knex('runs')
+        .join('areas', 'runs.area_id', 'areas.area_id')
+        .join('resorts', 'areas.resort_id', 'resorts.resort_id')
+        .select(
+          'runs.run_id',
+          'areas.area_id',
+          'resorts.resort_id'
+        )
+        .where('runs.run_id', selectedRunId)
+        .first();
+
+      if (runRow) {
+        selectedResortId = selectedResortId || runRow.resort_id;
+        selectedAreaId = selectedAreaId || runRow.area_id;
+      }
+    }
+
+    // Dropdown data
+    const resorts = await knex('resorts')
+      .select('resort_id', 'resort_name')
+      .orderBy('resort_name');
+
+    // Areas depend on selected resort
+    let areas = [];
+    if (selectedResortId) {
+      areas = await knex('areas')
+        .where('resort_id', selectedResortId)
+        .orderBy('area_name');
+    }
+
+    // Runs depend on selected area
+    let runs = [];
+    if (selectedAreaId) {
+      runs = await knex('runs')
+        .where('area_id', selectedAreaId)
+        .orderBy('run_name');
+    }
+
+    // Build base reports query
+    let reportsQuery = knex('reports')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .join('areas', 'runs.area_id', 'areas.area_id')
+      .join('resorts', 'areas.resort_id', 'resorts.resort_id')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .select(
+        'reports.report_id',
+        'reports.date_reported',
+        'reports.description',
+        'reports.obstacle',
+        'reports.groomed',
+        'reports.icy',
+        'reports.powder',
+        'reports.moguls',
+        'reports.thin_cover',
+        'runs.run_id',
+        'runs.run_name',
+        'areas.area_id',
+        'areas.area_name',
+        'resorts.resort_id',
+        'resorts.resort_name',
+        'users.user_id',
+        'users.username'
+      )
+      .orderBy('reports.date_reported', 'desc');
+
+    // Apply filters if selected
+    if (selectedResortId) {
+      reportsQuery = reportsQuery.where('resorts.resort_id', selectedResortId);
+    }
+    if (selectedAreaId) {
+      reportsQuery = reportsQuery.where('areas.area_id', selectedAreaId);
+    }
+    if (selectedRunId) {
+      reportsQuery = reportsQuery.where('runs.run_id', selectedRunId);
+    }
+
+    const reports = await reportsQuery;
+
+    res.render('reports', {
+      pageTitle: 'Reports',
+      resorts,
+      areas,
+      runs,
+      reports,
+      selectedResortId,
+      selectedAreaId,
+      selectedRunId
+    });
+  } catch (err) {
+    console.error('Error filtering reports:', err);
+    res.status(500).send('Error loading reports');
+  }
+});
+
 // API: get areas for a given resort (used by the slopes page JS)
 app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
     const resortId = req.params.id;
@@ -501,69 +704,20 @@ app.get('/api/resorts/:id/areas', requireLogin, async (req, res) => {
     }
 });
 
+// Get runs for a given area (used by reports page filters)
+app.get('/api/areas/:id/runs', requireLogin, async (req, res) => {
+  const areaId = req.params.id;
 
-// GET /reports: Display all reports
-// app.get('/reports', requireLogin, async (req, res) => {
-//     // **DB query to fetch all reports goes here**
-//     const mockReports = [{
-//         report_id: 1,
-//         slope_id: 1,
-//         slope_name: 'The Grotto',
-//         user_id: 1,
-//         username: 'testPerson',
-//         area_name: 'area',
-//         resort_name: 'resort',
-//         obstacle: true,
-//         description: 'Deep drifts after the storm. Watch out for a rock near the upper lift.',
-//         groomed: false,
-//         icy: true,
-//         powder: false,
-//         moguls: false,
-//         granular: true,
-//         thin_cover: true,
-//         packed: false,
-//         wet: false,
-//         created_time: new Date()
-//     }]; // Need to query for slope name and username
-//     res.render('reports', {
-//         pageTitle: 'Reports',
-//         reports: mockReports,
-//         resorts: [{resort_name: "Snowbird"}, {resort_name: "Sundance"}],
-//         areas: [{area_name: "Area1", resort_name: "Snowbird"},{area_name: "Area2", resort_name: "Snowbird"},{area_name: "Areaz", resort_name: "Sundance"}],
-//         runs: [{run_name: "Chickadee", area_name: "Area1", resort_name: "Snowbird"}, {run_name: "Baby Thunder", area_name: "Areaz", resort_name: "Sundance"}]
-//     });
-// });
-
-app.get('/reports', requireLogin, async (req, res) => {
   try {
+    const runs = await knex('runs')
+      .where('area_id', areaId)
+      .orderBy('run_name');
 
-    const reports = await knex('reports')
-      .join('users', 'reports.user_id', 'users.user_id')
-      .join('runs', 'reports.run_id', 'runs.run_id')
-      .orderBy('date_reported')
-      .select(
-        'reports.*',
-        'users.user_id as user_user_id',
-        'users.username',
-        'users.email',
-        'runs.run_name'
-      );
-
-    res.render('reports', {
-      pageTitle: 'Reports',
-      layout: 'public',
-      reports: reports
-    });
+    res.json(runs);
   } catch (err) {
-    console.error("DB ERROR:", err);
-    if (!res.headersSent) res.status(500).send("Database error: " + err.message);
+    console.error('Error fetching runs for area', areaId, err);
+    res.status(500).json({ error: 'Error loading runs' });
   }
-});
-
-// POST /reports: Create new report (CRUD - Lincoln)
-app.post('/reports/<%= user_id %>', requireLogin, async (req, res) => {
-    // **DB insert logic goes here**
-    res.redirect('/reports');
 });
 
 // Error Handling (404)
