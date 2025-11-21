@@ -98,7 +98,7 @@ app.get('/', async (req, res) => {
     const reports = await knex('reports')
       .join('users', 'reports.user_id', 'users.user_id')
       .join('runs', 'reports.run_id', 'runs.run_id')
-      .orderBy('date_reported')
+      .orderBy('date_reported', 'desc')
       .limit(3)
       .select(
         'reports.*',
@@ -437,9 +437,29 @@ app.post('/reports/:user_id', requireLogin, async (req, res) => {
 });
 
 // GET /dashboard: Private home page
-app.get('/dashboard', requireLogin, (req, res) => {
-    // The view will render based on res.locals.user
-    res.render('dashboard', { pageTitle: 'Dashboard' });
+app.get('/dashboard', requireLogin, async (req, res) => {
+  if (req.session.user) {
+    const reports = await knex('reports')
+      .join('users', 'reports.user_id', 'users.user_id')
+      .join('runs', 'reports.run_id', 'runs.run_id')
+      .orderBy('date_reported', 'desc')
+      .limit(3)
+      .select(
+        'reports.*',
+        'users.user_id as user_user_id',
+        'users.username',
+        'users.email',
+        'runs.run_name'
+      );
+
+    return res.render('dashboard', {
+      layout: 'public',
+      reports: reports,
+      pageTitle: 'Dashboard'
+    });
+  }
+
+  return res.render('landing', { layout: 'public' });
 });
 
 // 1) Show the dropdown (no runs yet)
