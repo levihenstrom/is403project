@@ -37,10 +37,55 @@
     </div>
 </div>
 
-<h2 class="mt-5">Latest Reports</h2>
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">Fresh powder reported on The Bowl - 1 hour ago.</a>
-    <a href="#" class="list-group-item list-group-item-action">Caution: Icy patch near Lift 3 base.</a>
-    <a href="#" class="list-group-item list-group-item-action">New run 'Eagle's Peak' added by Admin.</a>
-</div>
+<div class="row g-4 mt-3">
+    <% if (locals.reports && reports.length) { %>
+        <div class="list-group">
+        <h2>Latest Reports</h2>
+            <% reports.forEach(report => { %>
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><%= report.run_name || 'Run ID ' + report.run_id %></h5>
+                        <small class="text-muted"><%= new Date(report.date_reported).toLocaleString() %></small>
+                    </div>
+                    <p class="mb-1">
+                        <strong>Reported by:</strong> <%= report.username || 'Anonymous' %>
+                        <br>
+                        <strong>Status:</strong> 
+                        <% if (report.obstacle) { %>
+                            <span class="badge bg-info me-1">Obstacle</span>
+                        <% } %>
+                        <% if (report.groomed) { %>
+                            <span class="badge bg-info me-1">Groomed</span>
+                        <% } %>
+                        <% if (report.icy) { %>
+                            <span class="badge bg-info me-1">Icy</span>
+                        <% } %>
+                        <% if (report.powder) { %>
+                            <span class="badge bg-info me-1">Powder</span>
+                        <% } %>
+                        <% if (report.moguls) { %>
+                            <span class="badge bg-info me-1">Moguls</span>
+                        <% } %>
+                        <% if (report.granular) { %>
+                            <span class="badge bg-info me-1">Granular</span>
+                        <% } %>
+                        <% if (report.thin_cover) { %>
+                            <span class="badge bg-info me-1">Thin Cover</span>
+                        <% } %>
+                        <% if (report.packed) { %>
+                            <span class="badge bg-info me-1">Packed</span>
+                        <% } %>
+                        <% if (report.wet) { %>
+                            <span class="badge bg-info me-1">Wet</span>
+                        <% } %>
+                    </p>
+                    <small><%= report.description %></small>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div class="alert alert-info text-center">
+            No community reports have been submitted yet.
+        </div>
+    <% } %>
 </div>
